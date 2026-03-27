@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Design and Architecture</title>
+    <style>
+      :root {
+        --ink: #1f2937;
+        --muted: #4b5563;
+        --accent: #b8844f;
+        --paper: #ffffff;
+        --line: #e5e7eb;
+        --soft: #f8fafc;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: var(--ink);
+        background: var(--soft);
+        line-height: 1.55;
+      }
+
+      .page {
+        max-width: 900px;
+        margin: 28px auto;
+        background: var(--paper);
+        padding: 40px 48px;
+        border: 1px solid var(--line);
+      }
+
+      h1,
+      h2 {
+        margin: 0 0 12px;
+      }
+
+      h1 {
+        font-size: 30px;
+        color: #111827;
+      }
+
+      h2 {
+        font-size: 20px;
+        margin-top: 28px;
+        color: var(--accent);
+      }
+
+      p {
+        margin: 10px 0;
+      }
+
+      ul {
+        margin: 8px 0 0 22px;
+      }
+
+      li {
+        margin: 6px 0;
+      }
+
+      .intro {
+        font-size: 16px;
+      }
+
+      pre {
+        background: #f9fafb;
+        border: 1px solid var(--line);
+        padding: 16px;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 13px;
+      }
+
+      .small {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media print {
+        body {
+          background: #fff;
+        }
+
+        .page {
+          margin: 0;
+          border: none;
+          max-width: none;
+          padding: 24px 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <h1>Project Design and Architecture</h1>
+      <p class="small">Pawtner Hope Foundation Management System</p>
+
+      <p class="intro">
+        This project follows a 3-layer web application architecture using Go for
+        the backend, HTML/CSS/JavaScript for the frontend, and MongoDB with
+        in-memory runtime structures for storage and fast access.
+      </p>
+
+      <h2>1. High-Level Architecture</h2>
+      <pre>+---------------------------+
+|        Frontend UI        |
+|---------------------------|
+| index.html                |
+| auth.html                 |
+| service.html              |
+| dashboard.html            |
+| admin.html                |
++-------------+-------------+
+              |
+              | HTTP / JSON API
+              v
++---------------------------+
+|       Go Backend          |
+|---------------------------|
+| Routing                   |
+| Middleware                |
+| Business Logic            |
+| Auth / OTP / Reviews      |
+| Booking / Donation        |
+| Admin Management          |
++-------------+-------------+
+              |
+      -----------------
+      |               |
+      v               v
++-----------+   +------------------+
+| In-Memory |   | MongoDB Database |
+| Maps      |   | Persistent Store |
+| Slices    |   | pets, users,     |
+|           |   | bookings, reviews|
++-----------+   +------------------+
+              |
+              v
++---------------------------+
+| Background Workers        |
+|---------------------------|
+| Email Worker Pool         |
+| Payment Processor         |
+| Notification Queue        |
++---------------------------+</pre>
+
+      <h2>2. Frontend Design</h2>
+      <ul>
+        <li>`index.html` provides the home page and public information.</li>
+        <li>`auth.html` handles registration, OTP verification, and login.</li>
+        <li>`service.html` manages service booking and user reviews.</li>
+        <li>`dashboard.html` is the normal user dashboard.</li>
+        <li>`admin.html` is the admin control panel.</li>
+      </ul>
+
+      <h2>3. Backend Design</h2>
+      <p>
+        The backend is implemented in Go using the standard <strong>net/http</strong>
+        package. It exposes REST-style endpoints, validates requests, processes
+        business logic, and returns JSON responses to the frontend.
+      </p>
+
+      <h2>4. Middleware Layer</h2>
+      <ul>
+        <li><strong>recoverPanic()</strong> catches runtime panics and returns safe JSON errors.</li>
+        <li><strong>enableCORS()</strong> adds CORS headers and handles preflight requests.</li>
+        <li><strong>requireAdmin()</strong> is used for admin-only route protection.</li>
+        <li><strong>ValidateToken()</strong> validates JWT-based authentication tokens.</li>
+      </ul>
+
+      <h2>5. Business Modules</h2>
+      <ul>
+        <li>Pet management</li>
+        <li>User registration and OTP verification</li>
+        <li>Login with failed-attempt lockout</li>
+        <li>Service booking management</li>
+        <li>Admin booking review</li>
+        <li>User review submission</li>
+        <li>Donation processing and receipt handling</li>
+        <li>Adoption inquiries and contact messages</li>
+        <li>Statistics and admin dashboard summaries</li>
+      </ul>
+
+      <h2>6. Data Layer</h2>
+      <p>
+        The application uses both in-memory data structures and MongoDB. In-memory
+        slices and maps provide quick runtime access, while MongoDB provides
+        permanent persistence for pets, users, bookings, reviews, donations,
+        inquiries, and contact messages.
+      </p>
+
+      <h2>7. Worker Pool / Concurrency Design</h2>
+      <p>
+        Go concurrency is used through goroutines and channels. The project now
+        includes an email worker pool, along with separate background workers for
+        payment processing and payment confirmation handling.
+      </p>
+
+      <pre>                +----------------------+
+                |   API / Handlers     |
+                +----------+-----------+
+                           |
+                           v
+                  +------------------+
+                  | notificationCh   |
+                  +------------------+
+                           |
+            -----------------------------------
+            |                |               |
+            v                v               v
+      Email Worker 1   Email Worker 2   Email Worker 3</pre>
+
+      <h2>8. Request Flow Example</h2>
+      <p><strong>Service Booking Flow</strong></p>
+      <pre>User -> service.html form
+     -> POST /api/bookings
+     -> Go handler validates input
+     -> booking saved in memory + MongoDB
+     -> notification sent to worker pool
+     -> response returned to UI</pre>
+
+      <p><strong>User Review Flow</strong></p>
+      <pre>User -> service.html review form
+     -> POST /api/reviews
+     -> backend validates booking and email
+     -> review saved in MongoDB
+     -> rating/statistics updated
+     -> admin can view review in admin panel</pre>
+
+      <h2>9. Admin Architecture</h2>
+      <p>
+        The admin dashboard allows admins to manage pets, adoption inquiries,
+        bookings, donations, messages, and user-submitted reviews. Admin access
+        is controlled through JWT validation and admin-only authorization checks.
+      </p>
+
+      <h2>10. Conclusion</h2>
+      <p>
+        This project uses a modular and scalable full-stack design with a frontend
+        presentation layer, Go backend application layer, MongoDB persistence
+        layer, and asynchronous worker pool for background processing. This makes
+        the system suitable for pet adoption, service booking, and foundation
+        management operations.
+      </p>
+    </main>
+  </body>
+</html>

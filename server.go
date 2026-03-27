@@ -1581,6 +1581,7 @@ func startWorkers() {
 	}
 	go paymentProcessor(paymentCh, paymentConfirmCh)
 	go confirmationListener(paymentConfirmCh)
+	log.Printf("[WORKER-POOL] Email workers started: %d", emailWorkerCount)
 }
 
 // HTTP Handlers

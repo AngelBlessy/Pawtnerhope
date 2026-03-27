@@ -669,7 +669,7 @@ func TestCreateServiceReviewHandlerPersistsReviewAndStats(t *testing.T) {
 	}
 }
 
-func TestCreateServiceReviewHandlerRejectsUnapprovedBooking(t *testing.T) {
+func TestCreateServiceReviewHandlerRejectsDuplicateBookingReview(t *testing.T) {
 	initializeData()
 
 	bookingBody := bytes.NewBufferString(`{"serviceId":"svc-001","petName":"Milo","ownerName":"Jordan","email":"jordan@example.com","phone":"9999999999","date":"2099-12-31","time":"11:00","notes":"First visit"}`)
@@ -689,17 +689,30 @@ func TestCreateServiceReviewHandlerRejectsUnapprovedBooking(t *testing.T) {
 		t.Fatalf("failed to decode created booking: %v", err)
 	}
 
-	serviceReviewReq := httptest.NewRequest(
+	firstReviewReq := httptest.NewRequest(
 		"POST",
 		"/api/reviews",
 		bytes.NewBufferString(`{"bookingId":"`+bookingResp.Data.ID+`","serviceId":"svc-001","reviewerName":"Jordan","email":"jordan@example.com","rating":5,"comment":"Very caring team."}`),
 	)
-	serviceReviewReq.Header.Set("Content-Type", "application/json")
-	serviceReviewRR := httptest.NewRecorder()
-	createServiceReviewHandler(serviceReviewRR, serviceReviewReq)
+	firstReviewReq.Header.Set("Content-Type", "application/json")
+	firstReviewRR := httptest.NewRecorder()
+	createServiceReviewHandler(firstReviewRR, firstReviewReq)
 
-	if serviceReviewRR.Code != http.StatusBadRequest {
-		t.Fatalf("expected 400 for unapproved booking review, got %d", serviceReviewRR.Code)
+	if firstReviewRR.Code != http.StatusCreated {
+		t.Fatalf("expected 201 for first review, got %d", firstReviewRR.Code)
+	}
+
+	secondReviewReq := httptest.NewRequest(
+		"POST",
+		"/api/reviews",
+		bytes.NewBufferString(`{"bookingId":"`+bookingResp.Data.ID+`","serviceId":"svc-001","reviewerName":"Jordan","email":"jordan@example.com","rating":4,"comment":"Second review should fail."}`),
+	)
+	secondReviewReq.Header.Set("Content-Type", "application/json")
+	secondReviewRR := httptest.NewRecorder()
+	createServiceReviewHandler(secondReviewRR, secondReviewReq)
+
+	if secondReviewRR.Code != http.StatusConflict {
+		t.Fatalf("expected 409 for duplicate booking review, got %d", secondReviewRR.Code)
 	}
 }
 
