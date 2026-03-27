@@ -1,0 +1,1118 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <meta
+      name="description"
+      content="Pawtner Hope Foundation - Our Services: Pet Adoption, Rescue, Veterinary Care, Training, and More"
+    />
+    <meta name="theme-color" content="#d4a574" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="shortcut icon" href="/favicon.svg?v=2" />
+    <title>Our Services - Pawtner Hope Foundation</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+
+      :root {
+        --primary: #d4a574;
+        --primary-dark: #b8844f;
+        --secondary: #8b6f47;
+        --accent: #e8d5c4;
+        --dark: #2c2416;
+        --light: #faf8f5;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Work Sans", sans-serif;
+        color: var(--dark);
+        background: var(--light);
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Playfair Display", serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        padding: 0.875rem 2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        border: 2px solid var(--primary);
+        font-size: 0.95rem;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(212, 165, 116, 0.3);
+      }
+
+      .service-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(212, 165, 116, 0.1);
+      }
+
+      .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(44, 36, 22, 0.1);
+      }
+
+      .service-icon {
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .form-input,
+      .form-select,
+      .form-textarea {
+        width: 100%;
+        padding: 0.875rem 1.25rem;
+        border: 2px solid rgba(212, 165, 116, 0.2);
+        border-radius: 12px;
+        font-family: "Work Sans", sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+      }
+
+      .form-input:focus,
+      .form-select:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(212, 165, 116, 0.1);
+      }
+
+      .form-textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      #contact {
+        scroll-margin-top: 110px;
+      }
+
+      .flatpickr-input[readonly] {
+        background: #fff;
+        cursor: pointer;
+      }
+
+      .mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .mobile-menu.active {
+        transform: translateX(0);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 2rem !important;
+        }
+
+        h2 {
+          font-size: 1.75rem !important;
+        }
+
+        .service-card {
+          padding: 1.25rem;
+        }
+
+        .btn-primary {
+          padding: 0.875rem 2rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (min-width: 481px) and (max-width: 768px) {
+        h1 {
+          font-size: 2.5rem !important;
+        }
+
+        h2 {
+          font-size: 2rem !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 left-0 right-0 bg-white md:bg-white/95 md:backdrop-blur-md z-50 shadow-sm"
+    >
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <!-- Logo -->
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--primary),
+                  var(--primary-dark)
+                );
+              "
+            >
+              <i class="fas fa-paw text-white text-xl"></i>
+            </div>
+            <span
+              class="text-xl font-semibold"
+              style="
+                font-family: &quot;Playfair Display&quot;, serif;
+                color: var(--dark);
+              "
+              >Pawtner Hope</span
+            >
+          </div>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a
+              href="index.html"
+              class="nav-link text-gray-700 hover:text-amber-600"
+              >Home</a
+            >
+            <a
+              href="adoption.html"
+              class="nav-link text-gray-700 hover:text-amber-600"
+              >Adopt</a
+            >
+            <a
+              href="service.html"
+              class="nav-link text-amber-600 hover:text-amber-600"
+              >Services</a
+            >
+            <a
+              href="donate.html"
+              class="nav-link text-gray-700 hover:text-amber-600"
+              >Donate</a
+            >
+            <a
+              href="index.html#contact"
+              class="nav-link text-gray-700 hover:text-amber-600"
+              >Contact</a
+            >
+            <a id="nav-auth-btn" href="auth.html" class="btn-primary">Login</a>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button
+            id="mobile-menu-btn"
+            class="md:hidden text-gray-700 focus:outline-none"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div
+        id="mobile-menu"
+        class="mobile-menu md:hidden fixed top-0 right-0 bottom-0 w-64 bg-white shadow-2xl"
+      >
+        <div class="p-6">
+          <button
+            id="mobile-menu-close"
+            class="absolute top-6 right-6 text-gray-700"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+          <nav class="mt-8 space-y-4">
+            <a
+              href="index.html"
+              class="block py-2 text-gray-700 hover:text-amber-600"
+              >Home</a
+            >
+            <a
+              href="adoption.html"
+              class="block py-2 text-gray-700 hover:text-amber-600"
+              >Adopt</a
+            >
+            <a
+              href="service.html"
+              class="block py-2 text-amber-600 hover:text-amber-600"
+              >Services</a
+            >
+            <a
+              href="donate.html"
+              class="block py-2 text-gray-700 hover:text-amber-600"
+              >Donate</a
+            >
+            <a
+              href="index.html#contact"
+              class="block py-2 text-gray-700 hover:text-amber-600"
+              >Contact</a
+            >
+            <a
+              id="mobile-auth-btn"
+              href="auth.html"
+              class="block py-3 mt-4 text-center text-white rounded-full"
+              style="background: var(--primary)"
+              >Login</a
+            >
+          </nav>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-12 px-6 bg-gradient-to-br from-amber-50 to-white">
+      <div class="max-w-7xl mx-auto text-center">
+        <h1
+          class="text-4xl md:text-5xl font-bold mb-6"
+          style="color: var(--dark)"
+        >
+          Our Services
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          Comprehensive care and support for pets and their families
+        </p>
+      </div>
+    </section>
+
+    <!-- Services and Form Section - Side by Side -->
+    <section
+      id="contact"
+      class="py-12 px-6 bg-gradient-to-b from-white to-amber-50/30"
+    >
+      <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-[35%_65%] gap-8 items-stretch">
+          <!-- Services Overview - Left Side -->
+          <div class="flex flex-col">
+            <div class="mb-6">
+              <h2
+                class="text-3xl md:text-4xl font-bold mb-4"
+                style="color: var(--dark)"
+              >
+                Our Services
+              </h2>
+              <p class="text-gray-600">
+                Comprehensive care and support for pets and their families
+              </p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl p-8 flex-1">
+              <div class="grid grid-cols-2 gap-x-12 gap-y-6">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                  <!-- Pet Adoption -->
+                  <div class="service-card text-center">
+                    <div class="service-icon mx-auto">
+                      <svg
+                        class="w-7 h-7 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h3
+                      class="text-xl font-semibold mb-2"
+                      style="color: var(--dark)"
+                    >
+                      Pet Adoption
+                    </h3>
+                    <p class="text-gray-600 text-sm">
+                      Find your perfect companion
+                    </p>
+                  </div>
+
+                  <!-- Veterinary Care -->
+                  <div class="service-card text-center">
+                    <div class="service-icon mx-auto">
+                      <svg
+                        class="w-7 h-7 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h3
+                      class="text-xl font-semibold mb-2"
+                      style="color: var(--dark)"
+                    >
+                      Veterinary Care
+                    </h3>
+                    <p class="text-gray-600 text-sm">
+                      Medical care and vaccination
+                    </p>
+                  </div>
+
+                  <!-- Spay & Neuter -->
+                  <div class="service-card text-center">
+                    <div class="service-icon mx-auto">
+                      <svg
+                        class="w-7 h-7 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h3
+                      class="text-xl font-semibold mb-2"
+                      style="color: var(--dark)"
+                    >
+                      Spay & Neuter
+                    </h3>
+                    <p class="text-gray-600 text-sm">
+                      Free sterilization programs
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="space-y-6">
+                  <!-- Pet Training -->
+                  <div class="service-card text-center">
+                    <div class="service-icon mx-auto">
+                      <svg
+                        class="w-7 h-7 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h3
+                      class="text-xl font-semibold mb-2"
+                      style="color: var(--dark)"
+                    >
+                      Pet Training
+                    </h3>
+                    <p class="text-gray-600 text-sm">
+                      Professional training programs
+                    </p>
+                  </div>
+
+                  <!-- Emergency Rescue -->
+                  <div class="service-card text-center">
+                    <div class="service-icon mx-auto">
+                      <svg
+                        class="w-7 h-7 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h3
+                      class="text-xl font-semibold mb-2"
+                      style="color: var(--dark)"
+                    >
+                      Emergency Rescue
+                    </h3>
+                    <p class="text-gray-600 text-sm">
+                      24/7 animal emergency response
+                    </p>
+                  </div>
+
+                  <!-- Fostering Program -->
+                  <div class="service-card text-center">
+                    <div class="service-icon mx-auto">
+                      <svg
+                        class="w-7 h-7 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                        ></path>
+                      </svg>
+                    </div>
+                    <h3
+                      class="text-xl font-semibold mb-2"
+                      style="color: var(--dark)"
+                    >
+                      Fostering
+                    </h3>
+                    <p class="text-gray-600 text-sm">
+                      Temporary homes for pets
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Service Request Form - Right Side -->
+          <div class="flex flex-col">
+            <div class="mb-6">
+              <h2
+                class="text-3xl md:text-4xl font-bold mb-4"
+                style="color: var(--dark)"
+              >
+                Request a Service
+              </h2>
+              <p class="text-gray-600">
+                Fill out the form below and we'll get back to you soon
+              </p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-xl p-8 flex-1">
+              <form id="service-form" class="space-y-6">
+                <!-- Full Name -->
+                <div>
+                  <label
+                    for="fullName"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    required
+                    class="form-input"
+                    placeholder="Enter your full name"
+                  />
+                </div>
+
+                <!-- Pet Name -->
+                <div>
+                  <label
+                    for="petName"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Pet Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="petName"
+                    name="petName"
+                    required
+                    class="form-input"
+                    placeholder="Enter your pet's name"
+                  />
+                </div>
+
+                <!-- Email -->
+                <div>
+                  <label
+                    for="email"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    class="form-input"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+
+                <!-- Phone Number -->
+                <div>
+                  <label
+                    for="phone"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    required
+                    class="form-input"
+                    placeholder="999-999-9999"
+                  />
+                </div>
+
+                <!-- Service Required -->
+                <div>
+                  <label
+                    for="service"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Service Required *
+                  </label>
+                  <select
+                    id="service"
+                    name="service"
+                    required
+                    class="form-select"
+                  >
+                    <option value="">Select a service</option>
+                    <option value="emergency">Emergency Rescue</option>
+                    <option value="veterinary">Veterinary Care</option>
+                    <option value="spay-neuter">Spay & Neuter</option>
+                    <option value="training">Pet Training</option>
+                    <option value="fostering">Fostering Program</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <!-- Preferred Date & Time -->
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label
+                      for="date"
+                      class="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Preferred Date
+                    </label>
+                    <input
+                      type="date"
+                      id="date"
+                      name="date"
+                      class="form-input"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      for="time"
+                      class="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Preferred Time
+                    </label>
+                    <input
+                      type="text"
+                      id="time"
+                      name="time"
+                      class="form-input"
+                      placeholder="Select time"
+                    />
+                  </div>
+                </div>
+
+                <!-- Contact Method -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-3">
+                    Preferred Contact Method *
+                  </label>
+                  <div class="flex gap-6 flex-wrap">
+                    <label class="flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="contactMethod"
+                        value="phone"
+                        class="w-4 h-4 text-amber-600 border-gray-300 focus:ring-amber-500"
+                        checked
+                      />
+                      <span class="ml-2 text-gray-700">Phone</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="contactMethod"
+                        value="email"
+                        class="w-4 h-4 text-amber-600 border-gray-300 focus:ring-amber-500"
+                      />
+                      <span class="ml-2 text-gray-700">Email</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="contactMethod"
+                        value="both"
+                        class="w-4 h-4 text-amber-600 border-gray-300 focus:ring-amber-500"
+                      />
+                      <span class="ml-2 text-gray-700">Both</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Additional Message -->
+                <div>
+                  <label
+                    for="message"
+                    class="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Additional Information
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    class="form-textarea"
+                    placeholder="Tell us more about your request..."
+                  ></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div
+                  id="form-error"
+                  class="hidden bg-red-50 border-2 border-red-200 text-red-800 px-4 py-3 rounded-xl text-center"
+                ></div>
+
+                <button type="submit" class="btn-primary w-full">
+                  Submit Request
+                </button>
+
+                <!-- Success Message -->
+                <div
+                  id="form-success"
+                  class="hidden bg-green-50 border-2 border-green-200 text-green-800 px-4 py-3 rounded-xl text-center"
+                >
+                  Thank you! Your request has been received. We'll contact you
+                  soon.
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 bg-gray-900 text-white">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center">
+          <div class="flex items-center justify-center space-x-3 mb-4">
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--primary),
+                  var(--primary-dark)
+                );
+              "
+            >
+              <i class="fas fa-paw text-white text-xl"></i>
+            </div>
+            <span
+              class="text-xl font-semibold"
+              style="font-family: &quot;Playfair Display&quot;, serif"
+              >Pawtner Hope Foundation</span
+            >
+          </div>
+          <p class="text-gray-400 mb-6">Spreading love, one paw at a time</p>
+
+          <!-- Quick Links -->
+          <div class="flex flex-wrap justify-center gap-6 mb-6 text-sm">
+            <a
+              href="index.html#home"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Home</a
+            >
+            <a
+              href="index.html#pets"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Available Pets</a
+            >
+            <a
+              href="index.html#gallery"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Gallery</a
+            >
+            <a
+              href="service.html"
+              class="text-amber-400 hover:text-amber-400 transition"
+              >Services</a
+            >
+            <a
+              href="#contact"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Contact</a
+            >
+          </div>
+
+          <p class="text-gray-500 text-sm">
+            © 2024 Pawtner Hope Foundation. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileMenuClose = document.getElementById("mobile-menu-close");
+      const mobileLinks = mobileMenu.querySelectorAll("a");
+
+      mobileMenuBtn.addEventListener("click", () => {
+        mobileMenu.classList.add("active");
+      });
+
+      mobileMenuClose.addEventListener("click", () => {
+        mobileMenu.classList.remove("active");
+      });
+
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("active");
+        });
+      });
+
+      // Date input validation
+      const dateInput = document.getElementById("date");
+      const formError = document.getElementById("form-error");
+      const today = new Date();
+      const todayString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      dateInput.min = todayString;
+
+      function showFormError(message) {
+        formError.textContent = message;
+        formError.classList.remove("hidden");
+      }
+
+      function clearFormError() {
+        formError.textContent = "";
+        formError.classList.add("hidden");
+      }
+
+      dateInput.addEventListener("change", (e) => {
+        if (e.target.value && e.target.value < todayString) {
+          showFormError("Please select today or a future date.");
+          e.target.value = "";
+        } else {
+          clearFormError();
+        }
+      });
+
+      // Time input validation
+      const timeInput = document.getElementById("time");
+
+      if (window.flatpickr) {
+        window.flatpickr(timeInput, {
+          enableTime: true,
+          noCalendar: true,
+          dateFormat: "H:i",
+          altInput: true,
+          altFormat: "h:i K",
+          time_24hr: false,
+          minuteIncrement: 15,
+          defaultHour: 9,
+          defaultMinute: 0,
+          onClose: function (selectedDates, dateStr) {
+            if (!dateStr) return;
+            const [hours, minutes] = dateStr.split(":").map(Number);
+            const timeInMinutes = hours * 60 + minutes;
+            if (timeInMinutes < 9 * 60 || timeInMinutes > 21 * 60) {
+              showFormError(
+                "Please select a time between 09:00 AM and 09:00 PM.",
+              );
+              timeInput.value = "";
+            } else {
+              clearFormError();
+            }
+          },
+        });
+      }
+
+      timeInput.addEventListener("change", (e) => {
+        const selectedTime = e.target.value;
+        if (selectedTime) {
+          const [hours, minutes] = selectedTime.split(":").map(Number);
+          const timeInMinutes = hours * 60 + minutes;
+          const minTime = 9 * 60; // 09:00
+          const maxTime = 21 * 60; // 21:00
+
+          if (timeInMinutes < minTime || timeInMinutes > maxTime) {
+            showFormError(
+              "Please select a time between 09:00 AM and 09:00 PM.",
+            );
+            e.target.value = "";
+          } else {
+            clearFormError();
+          }
+        }
+      });
+
+      // Form submission
+      const serviceForm = document.getElementById("service-form");
+
+      serviceForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearFormError();
+
+        const selectedDate = document.getElementById("date").value;
+        if (selectedDate && selectedDate < todayString) {
+          showFormError("Please select today or a future date.");
+          return;
+        }
+
+        const selectedTime = document.getElementById("time").value;
+        if (selectedTime) {
+          const [hours, minutes] = selectedTime.split(":").map(Number);
+          const timeInMinutes = hours * 60 + minutes;
+          if (timeInMinutes < 9 * 60 || timeInMinutes > 21 * 60) {
+            showFormError(
+              "Please select a time between 09:00 AM and 09:00 PM.",
+            );
+            return;
+          }
+        }
+
+        try {
+          const formData = {
+            serviceId: document.getElementById("service").value,
+            ownerName: document.getElementById("fullName").value,
+            petName: document.getElementById("petName").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            date: document.getElementById("date").value,
+            time: document.getElementById("time").value,
+            notes: document.getElementById("message").value,
+          };
+
+          const response = await fetch("/api/bookings", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const data = await response.json().catch(() => ({}));
+
+          if (response.ok && data.success !== false) {
+            // Show success message
+            document.getElementById("form-success").classList.remove("hidden");
+            clearFormError();
+
+            // Reset form
+            serviceForm.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+              document.getElementById("form-success").classList.add("hidden");
+            }, 5000);
+          } else {
+            showFormError(
+              data.message || "Failed to submit booking. Please try again.",
+            );
+          }
+        } catch (error) {
+          console.error("Error submitting booking:", error);
+          showFormError("Failed to submit booking. Please try again later.");
+        }
+      });
+    </script>
+    <script>
+      (function () {
+        var token = localStorage.getItem("authToken");
+        if (!token) return;
+
+        var isAdmin = localStorage.getItem("isAdmin") === "true";
+        var dest = isAdmin ? "admin.html" : "dashboard.html";
+
+        function renderPill(username) {
+          var initial = (username || "?").charAt(0).toUpperCase();
+          ["nav-auth-btn", "mobile-auth-btn"].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.href = dest;
+            el.className = "";
+            el.style.cssText =
+              'display:inline-flex;align-items:center;gap:0.45rem;background:#2c2416;color:white;padding:0.28rem 0.75rem 0.28rem 0.28rem;border-radius:9999px;text-decoration:none;font-size:0.83rem;font-weight:500;line-height:1;font-family:"Work Sans",sans-serif;';
+            el.innerHTML =
+              '<span style="width:27px;height:27px;min-width:27px;background:#d4a574;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.72rem;color:white;">' +
+              initial +
+              "</span><span>" +
+              username +
+              "</span>";
+          });
+        }
+
+        function lockField(id, value) {
+          var el = document.getElementById(id);
+          if (!el || !value) return;
+          el.value = value;
+          el.readOnly = true;
+          el.style.background = "#f5f0ea";
+          el.style.cursor = "not-allowed";
+          el.style.borderColor = "#d4a574";
+          el.title = "Pre-filled from your account";
+          var label = document.querySelector('label[for="' + id + '"]');
+          if (label && !label.querySelector(".lock-icon")) {
+            var lock = document.createElement("span");
+            lock.className = "lock-icon";
+            lock.innerHTML =
+              ' <i class="fas fa-lock" style="font-size:0.65rem;color:#d4a574;margin-left:0.25rem;"></i>';
+            label.appendChild(lock);
+          }
+        }
+
+        function applyAll(username, email) {
+          renderPill(username);
+          lockField("fullName", username);
+          lockField("email", email);
+        }
+
+        var cachedName = localStorage.getItem("username");
+        var cachedEmail = localStorage.getItem("userEmail");
+        if (cachedName && cachedEmail) {
+          applyAll(cachedName, cachedEmail);
+        } else {
+          fetch("/api/auth/me", {
+            headers: { Authorization: "Bearer " + token },
+          })
+            .then(function (r) {
+              return r.json();
+            })
+            .then(function (body) {
+              if (body.success && body.data) {
+                var u = body.data.username || "";
+                var e = body.data.email || "";
+                localStorage.setItem("username", u);
+                localStorage.setItem("userEmail", e);
+                localStorage.setItem(
+                  "isAdmin",
+                  body.data.isAdmin ? "true" : "false",
+                );
+                dest = body.data.isAdmin ? "admin.html" : "dashboard.html";
+                applyAll(u, e);
+              }
+            })
+            .catch(function () {
+              renderPill(cachedName || "");
+            });
+        }
+      })();
+    </script>
+  </body>
+</html>

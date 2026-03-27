@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="My Dashboard - Pawtner Hope Foundation" />
+    <meta name="theme-color" content="#d4a574" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="shortcut icon" href="/favicon.svg?v=2" />
+    <title>My Dashboard - Pawtner Hope Foundation</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+
+      :root {
+        --primary: #d4a574;
+        --primary-dark: #b8844f;
+        --secondary: #8b6f47;
+        --accent: #e8d5c4;
+        --dark: #2c2416;
+        --light: #faf8f5;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Work Sans", sans-serif;
+        color: var(--dark);
+        background: var(--light);
+        min-height: 100vh;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Playfair Display", serif;
+      }
+
+      /* Navbar */
+      .navbar {
+        background: linear-gradient(135deg, var(--dark) 0%, #3d3020 100%);
+        color: white;
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 4px 20px rgba(44, 36, 22, 0.3);
+      }
+
+      .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        color: white;
+      }
+
+      .navbar-logo {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+      }
+
+      .navbar-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+
+      .navbar-title span {
+        color: var(--primary);
+      }
+
+      .navbar-right {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .user-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: rgba(212, 165, 116, 0.15);
+        border: 1px solid rgba(212, 165, 116, 0.3);
+        padding: 0.45rem 1rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+      }
+
+      .user-avatar {
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .logout-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: rgba(255, 255, 255, 0.8);
+        padding: 0.5rem 1.1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-family: "Work Sans", sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        transition: all 0.2s ease;
+      }
+
+      .logout-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+      }
+
+      /* Hero card */
+      .hero-card {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 60%,
+          var(--secondary) 100%
+        );
+        border-radius: 24px;
+        padding: 2.5rem 2.5rem 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(184, 132, 79, 0.3);
+      }
+
+      .hero-card::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+      }
+
+      .hero-card::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        right: 80px;
+        width: 160px;
+        height: 160px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+      }
+
+      /* Quick-action cards */
+      .action-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--dark);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        border: 2px solid transparent;
+      }
+
+      .action-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(212, 165, 116, 0.2);
+        border-color: var(--primary);
+      }
+
+      .action-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+      }
+
+      /* Info card */
+      .info-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.75rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      }
+
+      .info-card h3 {
+        font-size: 1.1rem;
+        color: var(--dark);
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--accent);
+      }
+
+      .info-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid #f5f0ea;
+        font-size: 0.9rem;
+      }
+
+      .info-row:last-child {
+        border-bottom: none;
+      }
+
+      .info-label {
+        color: var(--secondary);
+        width: 90px;
+        flex-shrink: 0;
+        font-weight: 500;
+      }
+
+      /* Tip card */
+      .tip-card {
+        background: linear-gradient(135deg, #fff9f4, #fef3e8);
+        border: 1px solid var(--accent);
+        border-radius: 16px;
+        padding: 1.25rem 1.5rem;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+
+      /* Mobile nav */
+      @media (max-width: 640px) {
+        .navbar {
+          padding: 0.875rem 1.25rem;
+        }
+
+        .navbar-title {
+          font-size: 1.05rem;
+        }
+
+        .user-badge .user-name {
+          display: none;
+        }
+      }
+
+      /* Subtle paw pattern background section */
+      .main-bg {
+        min-height: calc(100vh - 68px);
+        padding: 2rem 1.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      @media (min-width: 640px) {
+        .main-bg {
+          padding: 2.5rem 2rem;
+        }
+      }
+
+      /* Loading state */
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          #f0ebe4 25%,
+          #e8e0d6 50%,
+          #f0ebe4 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 8px;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="index.html" class="navbar-brand">
+        <div class="navbar-logo">
+          <i class="fas fa-paw"></i>
+        </div>
+        <span class="navbar-title">Pawtner <span>Hope</span></span>
+      </a>
+
+      <div class="navbar-right">
+        <div class="user-badge">
+          <div class="user-avatar" id="avatar-initials">?</div>
+          <span class="user-name" id="nav-username">Loading…</span>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="main-bg">
+      <!-- Welcome hero -->
+      <div class="hero-card mb-8" id="hero-section">
+        <p
+          style="
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+          "
+        >
+          Welcome back
+        </p>
+        <h1
+          style="font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem"
+          id="hero-name"
+        >
+          Hello!
+        </h1>
+        <p
+          style="
+            opacity: 0.85;
+            font-size: 0.96rem;
+            max-width: 480px;
+            line-height: 1.6;
+          "
+        >
+          Thank you for supporting Pawtner Hope Foundation. Every action you
+          take — whether adopting, donating, or spreading the word — makes a
+          real difference for animals in need.
+        </p>
+        <div
+          style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap"
+        >
+          <a
+            href="adoption.html"
+            style="
+              background: rgba(255, 255, 255, 0.95);
+              color: var(--primary-dark);
+              padding: 0.65rem 1.5rem;
+              border-radius: 50px;
+              font-size: 0.875rem;
+              font-weight: 600;
+              text-decoration: none;
+              display: inline-flex;
+              align-items: center;
+              gap: 0.5rem;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+              transition: all 0.2s ease;
+            "
+            onmouseover="this.style.transform = 'translateY(-2px)'"
+            onmouseout="this.style.transform = 'translateY(0)'"
+          >
+            <i class="fas fa-paw"></i> Browse Pets
+          </a>
+          <a
+            href="donate.html"
+            style="
+              background: rgba(255, 255, 255, 0.15);
+              color: white;
+              border: 1.5px solid rgba(255, 255, 255, 0.5);
+              padding: 0.65rem 1.5rem;
+              border-radius: 50px;
+              font-size: 0.875rem;
+              font-weight: 500;
+              text-decoration: none;
+              display: inline-flex;
+              align-items: center;
+              gap: 0.5rem;
+              transition: all 0.2s ease;
+            "
+            onmouseover="this.style.background = 'rgba(255,255,255,0.25)'"
+            onmouseout="this.style.background = 'rgba(255,255,255,0.15)'"
+          >
+            <i class="fas fa-heart"></i> Donate
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <h2 style="font-size: 1.4rem; margin-bottom: 1.25rem; color: var(--dark)">
+        Quick Actions
+      </h2>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          gap: 1.25rem;
+          margin-bottom: 2.5rem;
+        "
+      >
+        <a href="adoption.html" class="action-card">
+          <div
+            class="action-icon"
+            style="background: #fff4ea; color: var(--primary-dark)"
+          >
+            <i class="fas fa-paw"></i>
+          </div>
+          <div>
+            <div
+              style="font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem"
+            >
+              Adopt a Pet
+            </div>
+            <div style="font-size: 0.8rem; color: #888; line-height: 1.4">
+              Browse pets looking for a forever home
+            </div>
+          </div>
+        </a>
+
+        <a href="donate.html" class="action-card">
+          <div class="action-icon" style="background: #fff0f0; color: #e05252">
+            <i class="fas fa-heart"></i>
+          </div>
+          <div>
+            <div
+              style="font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem"
+            >
+              Donate
+            </div>
+            <div style="font-size: 0.8rem; color: #888; line-height: 1.4">
+              Support our rescue &amp; care mission
+            </div>
+          </div>
+        </a>
+
+        <a href="service.html" class="action-card">
+          <div class="action-icon" style="background: #f0f4ff; color: #4a6cf7">
+            <i class="fas fa-stethoscope"></i>
+          </div>
+          <div>
+            <div
+              style="font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem"
+            >
+              Pet Services
+            </div>
+            <div style="font-size: 0.8rem; color: #888; line-height: 1.4">
+              Vet, grooming &amp; boarding bookings
+            </div>
+          </div>
+        </a>
+
+        <a href="index.html#contact" class="action-card">
+          <div class="action-icon" style="background: #f0fbf4; color: #38a169">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div>
+            <div
+              style="font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem"
+            >
+              Contact Us
+            </div>
+            <div style="font-size: 0.8rem; color: #888; line-height: 1.4">
+              Reach our team for any queries
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Bottom grid: Account info + Tips -->
+      <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem">
+        <!-- Account info -->
+        <div class="info-card">
+          <h3>
+            <i
+              class="fas fa-user-circle"
+              style="color: var(--primary); margin-right: 0.5rem"
+            ></i
+            >Account Details
+          </h3>
+          <div class="info-row">
+            <span class="info-label">Name</span>
+            <span id="info-username" style="font-weight: 500">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email</span>
+            <span
+              id="info-email"
+              style="font-weight: 500; word-break: break-all"
+              >—</span
+            >
+          </div>
+          <div class="info-row">
+            <span class="info-label">Role</span>
+            <span
+              style="display: inline-flex; align-items: center; gap: 0.5rem"
+            >
+              <span
+                style="
+                  background: #e8f5e9;
+                  color: #2e7d32;
+                  font-size: 0.75rem;
+                  padding: 0.2rem 0.65rem;
+                  border-radius: 50px;
+                  font-weight: 600;
+                "
+              >
+                <i class="fas fa-check-circle" style="margin-right: 0.25rem"></i
+                >Member
+              </span>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Member since</span>
+            <span id="info-created" style="font-weight: 500">—</span>
+          </div>
+        </div>
+
+        <!-- Tips section -->
+        <div>
+          <h2
+            style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--dark)"
+          >
+            How You Can Help
+          </h2>
+
+          <div style="display: flex; flex-direction: column; gap: 0.875rem">
+            <div class="tip-card">
+              <div
+                style="
+                  color: var(--primary);
+                  font-size: 1.2rem;
+                  margin-top: 0.1rem;
+                "
+              >
+                <i class="fas fa-share-alt"></i>
+              </div>
+              <div>
+                <div
+                  style="
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    margin-bottom: 0.2rem;
+                  "
+                >
+                  Share our mission
+                </div>
+                <div style="font-size: 0.83rem; color: #666; line-height: 1.5">
+                  Tell friends and family about Pawtner Hope — every share helps
+                  us reach more people and save more lives.
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-card">
+              <div
+                style="color: #e05252; font-size: 1.2rem; margin-top: 0.1rem"
+              >
+                <i class="fas fa-hand-holding-heart"></i>
+              </div>
+              <div>
+                <div
+                  style="
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    margin-bottom: 0.2rem;
+                  "
+                >
+                  Become a foster parent
+                </div>
+                <div style="font-size: 0.83rem; color: #666; line-height: 1.5">
+                  Temporary fostering gives rescued pets a safe home while they
+                  wait for adoption. Contact us to learn how.
+                </div>
+              </div>
+            </div>
+
+            <div class="tip-card">
+              <div
+                style="color: #38a169; font-size: 1.2rem; margin-top: 0.1rem"
+              >
+                <i class="fas fa-donate"></i>
+              </div>
+              <div>
+                <div
+                  style="
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    margin-bottom: 0.2rem;
+                  "
+                >
+                  Give monthly
+                </div>
+                <div style="font-size: 0.83rem; color: #666; line-height: 1.5">
+                  Even a small recurring donation helps us plan better care,
+                  vaccinations, and rescues every month.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // --- Auth guard ---
+      const authToken = localStorage.getItem("authToken");
+      if (!authToken) {
+        window.location.href = "auth.html";
+      } else if (localStorage.getItem("isAdmin") === "true") {
+        window.location.href = "admin.html";
+      }
+
+      // --- Logout ---
+      function logout() {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("isAdmin");
+        localStorage.removeItem("username");
+        localStorage.removeItem("userEmail");
+        window.location.href = "auth.html";
+      }
+
+      // --- Populate UI from localStorage first ---
+      function setInitials(name) {
+        const parts = (name || "").trim().split(" ");
+        return parts.length >= 2
+          ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+          : (name || "?")[0].toUpperCase();
+      }
+
+      const storedUserId = localStorage.getItem("userId") || "";
+      const storedRole = localStorage.getItem("userRole") || "user";
+
+      // Set placeholders while we load
+      document.getElementById("nav-username").textContent = "Loading…";
+      document.getElementById("hero-name").textContent = "Hello!";
+
+      // --- Fetch profile from /api/auth/me ---
+      (async function loadProfile() {
+        try {
+          const res = await fetch("/api/auth/me", {
+            headers: { Authorization: "Bearer " + authToken },
+          });
+
+          if (res.status === 401) {
+            // Token expired or invalid
+            logout();
+            return;
+          }
+
+          const body = await res.json();
+          if (!body.success) {
+            return;
+          }
+
+          const user = body.data;
+
+          // Navbar
+          const displayName = user.username || user.email.split("@")[0];
+          document.getElementById("nav-username").textContent = displayName;
+          document.getElementById("avatar-initials").textContent =
+            setInitials(displayName);
+
+          // Hero
+          document.getElementById("hero-name").textContent =
+            "Hello, " + displayName + "!";
+
+          // Account card
+          document.getElementById("info-username").textContent =
+            user.username || "—";
+          document.getElementById("info-email").textContent = user.email || "—";
+
+          if (user.createdAt) {
+            try {
+              document.getElementById("info-created").textContent = new Date(
+                user.createdAt,
+              ).toLocaleDateString("en-IN", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              });
+            } catch (_) {
+              document.getElementById("info-created").textContent =
+                user.createdAt;
+            }
+          }
+
+          // Sync role to localStorage in case it changed server-side
+          localStorage.setItem("userRole", user.role);
+          if (user.isadmin) {
+            localStorage.setItem("isAdmin", "true");
+            window.location.href = "admin.html";
+          }
+        } catch (err) {
+          console.error("Failed to load profile:", err);
+          // Fall back to what we have in localStorage
+          const fallbackEmail = storedUserId;
+          document.getElementById("nav-username").textContent =
+            fallbackEmail || "User";
+          document.getElementById("hero-name").textContent = "Hello!";
+          document.getElementById("avatar-initials").textContent =
+            setInitials(fallbackEmail);
+        }
+      })();
+    </script>
+  </body>
+</html>

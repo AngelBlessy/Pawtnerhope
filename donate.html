@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <meta
+      name="description"
+      content="Support Pawtner Hope Foundation - Your donation helps us rescue, care for, and re-home abandoned pets."
+    />
+    <meta name="theme-color" content="#d4a574" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="shortcut icon" href="/favicon.svg?v=2" />
+    <title>Donate - Pawtner Hope Foundation</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+
+      :root {
+        --primary: #d4a574;
+        --primary-dark: #b8844f;
+        --secondary: #8b6f47;
+        --accent: #e8d5c4;
+        --dark: #2c2416;
+        --light: #faf8f5;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Work Sans", sans-serif;
+        color: var(--dark);
+        background: var(--light);
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Playfair Display", serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        padding: 0.875rem 2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        border: 2px solid var(--primary);
+        font-size: 0.95rem;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(212, 165, 116, 0.3);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--primary);
+        padding: 0.875rem 2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        border: 2px solid var(--primary);
+        font-size: 0.95rem;
+      }
+
+      .btn-secondary:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(212, 165, 116, 0.3);
+      }
+
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+      }
+
+      .mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .mobile-menu.active {
+        transform: translateX(0);
+      }
+
+      .amount-btn {
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        border: 2px solid #e5e7eb;
+        background: white;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-weight: 500;
+        text-align: center;
+      }
+
+      .amount-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .amount-btn:hover {
+        border-color: var(--primary);
+      }
+
+      .impact-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(212, 165, 116, 0.1);
+      }
+
+      .impact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(44, 36, 22, 0.1);
+      }
+
+      .impact-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 w-full bg-white md:bg-white/95 md:backdrop-blur-md z-50 transition-all duration-300"
+    >
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <!-- Logo -->
+          <a href="index.html" class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--primary),
+                  var(--primary-dark)
+                );
+              "
+            >
+              <i class="fas fa-paw text-white text-xl"></i>
+            </div>
+            <span
+              class="text-xl font-semibold"
+              style="font-family: &quot;Playfair Display&quot;, serif"
+              >Pawtner Hope</span
+            >
+          </a>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="nav-link text-gray-700">Home</a>
+            <a href="adoption.html" class="nav-link text-gray-700">Adopt</a>
+            <a href="service.html" class="nav-link text-gray-700">Services</a>
+            <a href="donate.html" class="nav-link" style="color: var(--primary)"
+              >Donate</a
+            >
+            <a href="index.html#contact" class="nav-link text-gray-700"
+              >Contact</a
+            >
+            <a id="nav-auth-btn" href="auth.html" class="btn-primary">Login</a>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button
+            id="mobile-menu-btn"
+            class="md:hidden text-gray-700 focus:outline-none"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div
+      id="mobile-menu"
+      class="mobile-menu md:hidden fixed top-0 right-0 bottom-0 w-64 bg-white shadow-2xl z-50"
+    >
+      <div class="p-6">
+        <button
+          id="mobile-menu-close"
+          class="absolute top-6 right-6 text-gray-700"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+        <nav class="mt-8 space-y-4">
+          <a
+            href="index.html"
+            class="block py-2 text-gray-700 hover:text-amber-600"
+            >Home</a
+          >
+          <a
+            href="adoption.html"
+            class="block py-2 text-gray-700 hover:text-amber-600"
+            >Adopt</a
+          >
+          <a
+            href="service.html"
+            class="block py-2 text-gray-700 hover:text-amber-600"
+            >Services</a
+          >
+          <a
+            href="donate.html"
+            class="block py-2 text-amber-600 hover:text-amber-600"
+            >Donate</a
+          >
+          <a
+            href="index.html#contact"
+            class="block py-2 text-gray-700 hover:text-amber-600"
+            >Contact</a
+          >
+          <a
+            id="mobile-auth-btn"
+            href="auth.html"
+            class="block py-3 mt-4 text-center text-white rounded-full"
+            style="background: var(--primary)"
+            >Login</a
+          >
+        </nav>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section
+      class="pt-32 pb-16 px-6"
+      style="
+        background: linear-gradient(
+          135deg,
+          rgba(212, 165, 116, 0.1) 0%,
+          rgba(232, 213, 196, 0.2) 100%
+        );
+      "
+    >
+      <div class="max-w-7xl mx-auto text-center">
+        <h1
+          class="text-5xl md:text-6xl font-bold mb-6"
+          style="color: var(--dark)"
+        >
+          Make a Difference Today
+        </h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Your donation helps us rescue, rehabilitate, and rehome abandoned
+          pets. Every contribution counts.
+        </p>
+      </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="py-16 px-6 bg-white">
+      <div class="max-w-7xl mx-auto">
+        <h2
+          class="text-4xl font-bold text-center mb-12"
+          style="color: var(--dark)"
+        >
+          Your Impact
+        </h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="impact-card">
+            <div class="impact-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <h3 class="text-2xl font-semibold mb-3" style="color: var(--dark)">
+              ₹500
+            </h3>
+            <p class="text-gray-600">
+              Provides food and basic care for one pet for a week
+            </p>
+          </div>
+
+          <div class="impact-card">
+            <div class="impact-icon">
+              <i class="fas fa-syringe"></i>
+            </div>
+            <h3 class="text-2xl font-semibold mb-3" style="color: var(--dark)">
+              ₹2,000
+            </h3>
+            <p class="text-gray-600">
+              Covers vaccination and basic medical checkup for a pet
+            </p>
+          </div>
+
+          <div class="impact-card">
+            <div class="impact-icon">
+              <i class="fas fa-home"></i>
+            </div>
+            <h3 class="text-2xl font-semibold mb-3" style="color: var(--dark)">
+              ₹5,000
+            </h3>
+            <p class="text-gray-600">
+              Supports full rescue, rehabilitation, and adoption preparation
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Donation Form -->
+    <section class="py-16 px-6">
+      <div class="max-w-3xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12">
+          <h2
+            class="text-3xl font-bold mb-8 text-center"
+            style="color: var(--dark)"
+          >
+            Support Our Cause
+          </h2>
+
+          <form id="donation-form" novalidate>
+            <!-- Donation Amount -->
+            <div class="mb-8">
+              <label class="block text-sm font-medium text-gray-700 mb-4">
+                Choose Donation Amount *
+              </label>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <button type="button" class="amount-btn" data-amount="500">
+                  ₹500
+                </button>
+                <button type="button" class="amount-btn" data-amount="1000">
+                  ₹1,000
+                </button>
+                <button type="button" class="amount-btn" data-amount="2000">
+                  ₹2,000
+                </button>
+                <button type="button" class="amount-btn" data-amount="5000">
+                  ₹5,000
+                </button>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  id="custom-amount"
+                  placeholder="Or enter custom amount"
+                  class="form-input"
+                  min="1"
+                  step="1"
+                />
+              </div>
+              <p
+                id="amount-error"
+                class="hidden text-red-500 text-sm mt-2 flex items-center gap-1"
+              >
+                <i class="fas fa-exclamation-circle"></i>
+                <span></span>
+              </p>
+            </div>
+
+            <!-- Donor Information -->
+            <div class="space-y-5 mb-8">
+              <div>
+                <label
+                  for="donor-name"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  id="donor-name"
+                  class="form-input"
+                  placeholder="John Doe"
+                />
+                <p
+                  id="name-error"
+                  class="hidden text-red-500 text-sm mt-2 flex items-center gap-1"
+                >
+                  <i class="fas fa-exclamation-circle"></i>
+                  <span></span>
+                </p>
+              </div>
+
+              <div>
+                <label
+                  for="donor-email"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  id="donor-email"
+                  class="form-input"
+                  placeholder="john@example.com"
+                />
+                <p
+                  id="email-error"
+                  class="hidden text-red-500 text-sm mt-2 flex items-center gap-1"
+                >
+                  <i class="fas fa-exclamation-circle"></i>
+                  <span></span>
+                </p>
+              </div>
+            </div>
+
+            <!-- UPI Payment -->
+            <div class="mb-8">
+              <label class="block text-sm font-medium text-gray-700 mb-3">
+                Payment Method
+              </label>
+              <div
+                class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-6"
+              >
+                <div class="flex items-center gap-4 mb-4">
+                  <div
+                    class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style="background: var(--primary)"
+                  >
+                    <i class="fas fa-mobile-alt text-white text-xl"></i>
+                  </div>
+                  <div>
+                    <p class="font-semibold" style="color: var(--dark)">
+                      UPI Payment
+                    </p>
+                    <p class="text-sm text-gray-500">
+                      Pay instantly with any UPI app
+                    </p>
+                  </div>
+                  <div class="ml-auto">
+                    <img
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/1200px-UPI-Logo-vector.svg.png"
+                      alt="UPI"
+                      class="h-6 object-contain opacity-80"
+                      onerror="this.style.display = 'none'"
+                    />
+                  </div>
+                </div>
+                <div class="bg-white rounded-xl p-4 border border-amber-100">
+                  <p
+                    class="text-xs text-gray-500 mb-1 uppercase tracking-wide font-medium"
+                  >
+                    UPI ID
+                  </p>
+                  <div class="flex items-center justify-between">
+                    <p
+                      class="font-mono font-semibold text-lg"
+                      style="color: var(--primary-dark)"
+                    >
+                      adsgpt@upi
+                    </p>
+                    <button
+                      type="button"
+                      onclick="copyUPIId(this)"
+                      class="text-xs px-3 py-1 rounded-lg border transition hover:bg-amber-50"
+                      style="
+                        border-color: var(--primary);
+                        color: var(--primary);
+                      "
+                    >
+                      <i class="fas fa-copy mr-1"></i>Copy
+                    </button>
+                  </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3 text-center">
+                  <i class="fas fa-lock mr-1 text-green-500"></i>
+                  Secured payment · Works with PhonePe, GPay, Paytm &amp; all
+                  UPI apps
+                </p>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="pay-btn" class="btn-primary w-full">
+              <i class="fas fa-rupee-sign mr-2"></i>
+              Pay via UPI
+            </button>
+            <p
+              class="text-center text-xs mt-3 font-medium"
+              style="color: var(--primary-dark)"
+            >
+              <i class="fas fa-mobile-alt mr-1"></i>
+              Donating on your phone? You'll get an automatic receipt —
+              preferred.
+            </p>
+            <p class="text-center text-xs text-gray-400 mt-1">
+              Desktop donors can request a receipt by emailing
+              <a
+                href="mailto:pawtnerhopefoundation@gmail.com"
+                class="underline hover:text-gray-600"
+                >pawtnerhopefoundation@gmail.com</a
+              >.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- UPI Payment Modal -->
+    <div
+      id="upi-modal"
+      class="fixed inset-0 z-50 hidden items-start justify-center p-4 overflow-y-auto"
+      style="background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px)"
+    >
+      <div
+        class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden my-auto"
+        style="
+          margin-top: max(1rem, env(safe-area-inset-top));
+          margin-bottom: max(1rem, env(safe-area-inset-bottom));
+        "
+      >
+        <!-- Modal Header -->
+        <div
+          class="p-6 text-white text-center"
+          style="
+            background: linear-gradient(
+              135deg,
+              var(--primary),
+              var(--primary-dark)
+            );
+          "
+        >
+          <div
+            class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3"
+          >
+            <i class="fas fa-paw text-2xl"></i>
+          </div>
+          <h3
+            class="text-xl font-bold"
+            style="font-family: &quot;Playfair Display&quot;, serif"
+          >
+            Complete Your Donation
+          </h3>
+          <p class="text-white/80 text-sm mt-1">Pawtner Hope Foundation</p>
+        </div>
+
+        <!-- Amount Banner -->
+        <div
+          class="bg-amber-50 border-b border-amber-100 px-6 py-4 text-center"
+        >
+          <p class="text-sm text-gray-500 mb-1">Donating</p>
+          <p
+            id="modal-amount"
+            class="text-4xl font-bold"
+            style="
+              color: var(--primary-dark);
+              font-family: &quot;Playfair Display&quot;, serif;
+            "
+          >
+            ₹0
+          </p>
+          <p class="text-xs text-gray-400 mt-1">to adsgpt@upi</p>
+        </div>
+
+        <!-- Step 1: Pay -->
+        <div id="step-pay" class="p-6">
+          <!-- Mobile: Direct UPI deeplink -->
+          <div id="mobile-pay" class="hidden">
+            <p class="text-center text-sm text-gray-600 mb-4">
+              Tap to open your UPI app directly
+            </p>
+            <a
+              id="upi-deeplink"
+              href="#"
+              class="btn-primary w-full text-center block mb-3"
+              style="display: block"
+            >
+              <i class="fas fa-mobile-alt mr-2"></i>
+              Open UPI App to Pay
+            </a>
+            <p class="text-center text-xs text-gray-400 mb-4">
+              or use another UPI app
+            </p>
+          </div>
+
+          <!-- Desktop: QR Code -->
+          <div id="desktop-pay">
+            <p class="text-center text-sm text-gray-600 mb-3">
+              Scan with any UPI app
+            </p>
+            <div class="flex justify-center mb-4">
+              <div
+                class="p-3 bg-white rounded-2xl border-2 border-amber-200 shadow-sm"
+              >
+                <img
+                  id="upi-qr"
+                  src=""
+                  alt="UPI QR Code"
+                  class="w-44 h-44 rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- UPI ID Row (always visible) -->
+          <div
+            class="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3 mb-5"
+          >
+            <div>
+              <p class="text-xs text-gray-400 uppercase tracking-wide">
+                UPI ID
+              </p>
+              <p
+                class="font-mono font-semibold"
+                style="color: var(--primary-dark)"
+              >
+                adsgpt@upi
+              </p>
+            </div>
+            <button
+              onclick="copyUPIId(this)"
+              class="text-xs px-3 py-1.5 rounded-lg border transition"
+              style="border-color: var(--primary); color: var(--primary)"
+            >
+              <i class="fas fa-copy mr-1"></i>Copy
+            </button>
+          </div>
+
+          <button onclick="showConfirmStep()" class="btn-primary w-full">
+            <i class="fas fa-check mr-2"></i>
+            I've Completed the Payment
+          </button>
+          <button onclick="closeModal()" class="btn-secondary w-full mt-3">
+            Cancel
+          </button>
+        </div>
+
+        <!-- Step 2: Confirm UTR -->
+        <div id="step-confirm" class="p-6 hidden">
+          <div
+            class="bg-green-50 border border-green-200 rounded-xl p-4 mb-5 text-center"
+          >
+            <i class="fas fa-shield-alt text-green-500 text-2xl mb-2"></i>
+            <p class="text-sm text-gray-600">
+              Enter your UPI Transaction ID / UTR number to confirm your
+              donation
+            </p>
+          </div>
+          <div class="mb-5">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              UPI Transaction ID / UTR *
+            </label>
+            <input
+              type="text"
+              id="utr-input"
+              class="form-input"
+              placeholder="e.g. 405612345678"
+              maxlength="50"
+            />
+            <p
+              id="utr-error"
+              class="hidden text-red-500 text-sm mt-2 flex items-center gap-1"
+            >
+              <i class="fas fa-exclamation-circle"></i>
+              <span></span>
+            </p>
+          </div>
+          <!-- Receipt info -->
+          <div
+            id="receipt-hint"
+            class="text-xs rounded-xl px-4 py-3 mb-4 text-center"
+          ></div>
+          <button
+            onclick="confirmPayment()"
+            id="confirm-btn"
+            class="btn-primary w-full"
+          >
+            <i class="fas fa-heart mr-2"></i>
+            Confirm Donation
+          </button>
+          <button onclick="showPayStep()" class="btn-secondary w-full mt-3">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back
+          </button>
+          <!-- Submit error -->
+          <div
+            id="submit-error"
+            class="hidden bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 mt-4 text-center"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="success-toast" class="fixed bottom-6 right-6 z-50 hidden max-w-sm">
+      <div
+        class="bg-white rounded-2xl shadow-2xl border border-green-100 p-5 flex items-start gap-4"
+      >
+        <div
+          class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0"
+        >
+          <i class="fas fa-check text-green-500 text-xl"></i>
+        </div>
+        <div>
+          <p class="font-semibold text-gray-900">Donation Confirmed! 🐾</p>
+          <p id="toast-message" class="text-sm text-gray-500 mt-0.5">
+            Thank you for supporting Pawtner Hope. Your generosity makes a real
+            difference!
+          </p>
+        </div>
+        <button
+          onclick="
+            document.getElementById('success-toast').classList.add('hidden')
+          "
+          class="text-gray-300 hover:text-gray-500 ml-auto"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <section class="py-16 px-6 bg-white">
+      <div class="max-w-7xl mx-auto">
+        <h2
+          class="text-4xl font-bold text-center mb-12"
+          style="color: var(--dark)"
+        >
+          Our Impact So Far
+        </h2>
+        <div class="grid md:grid-cols-4 gap-8" id="stats-container">
+          <div class="text-center">
+            <div class="text-5xl font-bold mb-2" style="color: var(--primary)">
+              <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <p class="text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 bg-gray-900 text-white">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center">
+          <div class="flex items-center justify-center space-x-3 mb-4">
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--primary),
+                  var(--primary-dark)
+                );
+              "
+            >
+              <i class="fas fa-paw text-white text-xl"></i>
+            </div>
+            <span
+              class="text-xl font-semibold"
+              style="font-family: &quot;Playfair Display&quot;, serif"
+              >Pawtner Hope Foundation</span
+            >
+          </div>
+          <p class="text-gray-400 mb-6">Spreading love, one paw at a time</p>
+
+          <!-- Quick Links -->
+          <div class="flex flex-wrap justify-center gap-6 mb-6 text-sm">
+            <a
+              href="index.html"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Home</a
+            >
+            <a
+              href="adoption.html"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Adopt</a
+            >
+            <a
+              href="service.html"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Services</a
+            >
+            <a href="donate.html" class="text-amber-400">Donate</a>
+            <a
+              href="index.html#contact"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Contact</a
+            >
+          </div>
+
+          <p class="text-gray-500 text-sm">
+            © 2024 Pawtner Hope Foundation. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // ── Mobile menu ────────────────────────────────────────────────
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileMenuClose = document.getElementById("mobile-menu-close");
+      mobileMenuBtn.addEventListener("click", () =>
+        mobileMenu.classList.add("active"),
+      );
+      mobileMenuClose.addEventListener("click", () =>
+        mobileMenu.classList.remove("active"),
+      );
+      mobileMenu
+        .querySelectorAll("a")
+        .forEach((l) =>
+          l.addEventListener("click", () =>
+            mobileMenu.classList.remove("active"),
+          ),
+        );
+
+      // ── Navbar shadow on scroll ────────────────────────────────────
+      const nav = document.querySelector("nav");
+      window.addEventListener("scroll", () =>
+        nav.classList.toggle("shadow-lg", window.scrollY > 100),
+      );
+
+      // ── Amount selection ───────────────────────────────────────────
+      let selectedAmount = 0;
+      const amountBtns = document.querySelectorAll(".amount-btn");
+      const customAmountInput = document.getElementById("custom-amount");
+
+      amountBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          amountBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          selectedAmount = parseInt(btn.dataset.amount);
+          customAmountInput.value = "";
+          clearFieldError("amount-error");
+        });
+      });
+
+      customAmountInput.addEventListener("input", () => {
+        amountBtns.forEach((b) => b.classList.remove("active"));
+        selectedAmount = parseInt(customAmountInput.value) || 0;
+        clearFieldError("amount-error");
+      });
+
+      // ── Field error helpers ────────────────────────────────────────
+      function showFieldError(id, msg) {
+        const el = document.getElementById(id);
+        el.querySelector("span").textContent = msg;
+        el.classList.remove("hidden");
+        el.previousElementSibling &&
+          el.previousElementSibling.tagName === "INPUT" &&
+          el.previousElementSibling.classList.add("border-red-400");
+      }
+
+      function clearFieldError(id) {
+        const el = document.getElementById(id);
+        el.classList.add("hidden");
+        el.previousElementSibling &&
+          el.previousElementSibling.tagName === "INPUT" &&
+          el.previousElementSibling.classList.remove("border-red-400");
+      }
+
+      function validateForm() {
+        let ok = true;
+        const name = document.getElementById("donor-name").value.trim();
+        const email = document.getElementById("donor-email").value.trim();
+
+        if (selectedAmount < 1) {
+          showFieldError(
+            "amount-error",
+            "Please select or enter a minimum donation of ₹1.",
+          );
+          ok = false;
+        } else clearFieldError("amount-error");
+
+        if (!name) {
+          showFieldError("name-error", "Full name is required.");
+          ok = false;
+        } else clearFieldError("name-error");
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showFieldError("email-error", "Please enter a valid email address.");
+          ok = false;
+        } else clearFieldError("email-error");
+
+        return ok;
+      }
+
+      // ── Copy UPI ID ────────────────────────────────────────────────
+      function copyUPIId(btn) {
+        navigator.clipboard
+          .writeText("adsgpt@upi")
+          .then(() => {
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+            btn.style.color = "#16a34a";
+            btn.style.borderColor = "#16a34a";
+            setTimeout(() => {
+              btn.innerHTML = original;
+              btn.style.color = "";
+              btn.style.borderColor = "";
+            }, 2000);
+          })
+          .catch(() => {
+            btn.innerHTML = '<i class="fas fa-times mr-1"></i>Failed';
+            setTimeout(
+              () => (btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy'),
+              2000,
+            );
+          });
+      }
+
+      // ── Modal state ────────────────────────────────────────────────
+      const modal = document.getElementById("upi-modal");
+      let currentTxnRef = "";
+      let pendingDonorName = "";
+      let pendingDonorEmail = "";
+
+      function openModal() {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal() {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        document.body.style.overflow = "";
+        showPayStep();
+      }
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      function showPayStep() {
+        document.getElementById("step-pay").classList.remove("hidden");
+        document.getElementById("step-confirm").classList.add("hidden");
+      }
+
+      function showConfirmStep() {
+        document.getElementById("step-pay").classList.add("hidden");
+        document.getElementById("step-confirm").classList.remove("hidden");
+        document.getElementById("utr-input").value = "";
+        clearFieldError("utr-error");
+        document.getElementById("submit-error").classList.add("hidden");
+
+        // Show receipt hint depending on device
+        const hint = document.getElementById("receipt-hint");
+        if (isMobile) {
+          hint.className =
+            "text-xs rounded-xl px-4 py-3 mb-4 text-center bg-green-50 border border-green-200 text-green-700";
+          hint.innerHTML =
+            '<i class="fas fa-envelope mr-1"></i>A donation receipt will be emailed to you automatically after confirmation.';
+        } else {
+          hint.className =
+            "text-xs rounded-xl px-4 py-3 mb-4 text-center bg-amber-50 border border-amber-200 text-amber-700";
+          hint.innerHTML =
+            '<i class="fas fa-mobile-alt mr-1"></i><strong>Prefer donating on your phone</strong> for an automatic receipt. Desktop donors can request a receipt by emailing <a href="mailto:pawtnerhopefoundation@gmail.com" class="underline">pawtnerhopefoundation@gmail.com</a>.';
+        }
+      }
+
+      // ── Device detection ───────────────────────────────────────────
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      function prepareModal(amount, txnRef, donorName) {
+        document.getElementById("modal-amount").textContent =
+          "₹" + Number(amount).toLocaleString("en-IN");
+
+        const upiNote = encodeURIComponent(
+          "Donation to Pawtner Hope by " + donorName,
+        );
+        const upiName = encodeURIComponent("Pawtner Hope Foundation");
+        const upiLink = `upi://pay?pa=adsgpt@upi&pn=${upiName}&am=${amount}&cu=INR&tn=${upiNote}&tr=${txnRef}`;
+
+        if (isMobile) {
+          document.getElementById("mobile-pay").classList.remove("hidden");
+          document.getElementById("desktop-pay").classList.add("hidden");
+          document.getElementById("upi-deeplink").href = upiLink;
+        } else {
+          document.getElementById("mobile-pay").classList.add("hidden");
+          document.getElementById("desktop-pay").classList.remove("hidden");
+          // QR Code via Google Charts API (generates a UPI-standard QR)
+          const qrData = encodeURIComponent(upiLink);
+          document.getElementById("upi-qr").src =
+            `https://api.qrserver.com/v1/create-qr-code/?data=${qrData}&size=176x176&margin=4&color=2c2416`;
+        }
+      }
+
+      // ── Form submit ────────────────────────────────────────────────
+      document
+        .getElementById("donation-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          if (!validateForm()) return;
+
+          pendingDonorName = document.getElementById("donor-name").value.trim();
+          pendingDonorEmail = document
+            .getElementById("donor-email")
+            .value.trim();
+          currentTxnRef = "TXN" + Date.now();
+
+          prepareModal(selectedAmount, currentTxnRef, pendingDonorName);
+          showPayStep();
+          openModal();
+        });
+
+      // ── Confirm payment (UTR step) ─────────────────────────────────
+      async function confirmPayment() {
+        const utr = document.getElementById("utr-input").value.trim();
+        if (!utr || utr.length < 6) {
+          showFieldError(
+            "utr-error",
+            "Please enter a valid UPI Transaction ID / UTR number.",
+          );
+          return;
+        }
+        clearFieldError("utr-error");
+
+        const confirmBtn = document.getElementById("confirm-btn");
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin mr-2"></i>Processing…';
+        document.getElementById("submit-error").classList.add("hidden");
+
+        try {
+          const res = await fetch("/api/donations", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              donorName: pendingDonorName,
+              donorEmail: pendingDonorEmail,
+              amount: selectedAmount,
+              paymentMethod: "UPI",
+              transactionId: utr || currentTxnRef,
+              paymentViaDeeplink: isMobile,
+            }),
+          });
+
+          const data = await res.json().catch(() => ({}));
+
+          if (!res.ok) {
+            throw new Error(data.message || `Server error (${res.status})`);
+          }
+
+          // ── Success ──
+          closeModal();
+          // Reset form
+          document.getElementById("donation-form").reset();
+          amountBtns.forEach((b) => b.classList.remove("active"));
+          selectedAmount = 0;
+          // Show toast with server message
+          const toast = document.getElementById("success-toast");
+          const toastMsg = document.getElementById("toast-message");
+          if (toastMsg && data.message) toastMsg.textContent = data.message;
+          toast.classList.remove("hidden");
+          setTimeout(() => toast.classList.add("hidden"), 9000);
+          loadStatistics();
+        } catch (err) {
+          const errEl = document.getElementById("submit-error");
+          errEl.textContent =
+            err.message || "Something went wrong. Please try again.";
+          errEl.classList.remove("hidden");
+        } finally {
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML =
+            '<i class="fas fa-heart mr-2"></i>Confirm Donation';
+        }
+      }
+
+      // ── Load statistics ────────────────────────────────────────────
+      async function loadStatistics() {
+        try {
+          const res = await fetch("/api/statistics");
+          if (!res.ok) throw new Error("Failed to fetch");
+          const body = await res.json();
+          const stats = body.data || body;
+          document.getElementById("stats-container").innerHTML = `
+            <div class="text-center">
+              <div class="text-5xl font-bold mb-2" style="color: var(--primary)">${stats.totalPets ?? 0}</div>
+              <p class="text-gray-600">Pets Rescued</p>
+            </div>
+            <div class="text-center">
+              <div class="text-5xl font-bold mb-2" style="color: var(--primary)">${stats.totalRequests ?? 0}</div>
+              <p class="text-gray-600">Adoption Inquiries</p>
+            </div>
+            <div class="text-center">
+              <div class="text-5xl font-bold mb-2" style="color: var(--primary)">${stats.totalBookings ?? 0}</div>
+              <p class="text-gray-600">Service Bookings</p>
+            </div>
+            <div class="text-center">
+              <div class="text-5xl font-bold mb-2" style="color: var(--primary)">${stats.totalUsers ?? 0}</div>
+              <p class="text-gray-600">Registered Users</p>
+            </div>`;
+        } catch {
+          // silently fail – statistics are non-critical
+        }
+      }
+
+      window.addEventListener("load", loadStatistics);
+    </script>
+    <script>
+      (function () {
+        var token = localStorage.getItem("authToken");
+        if (!token) return;
+
+        var isAdmin = localStorage.getItem("isAdmin") === "true";
+        var dest = isAdmin ? "admin.html" : "dashboard.html";
+
+        function renderPill(username) {
+          var initial = (username || "?").charAt(0).toUpperCase();
+          ["nav-auth-btn", "mobile-auth-btn"].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.href = dest;
+            el.className = "";
+            el.style.cssText =
+              'display:inline-flex;align-items:center;gap:0.45rem;background:#2c2416;color:white;padding:0.28rem 0.75rem 0.28rem 0.28rem;border-radius:9999px;text-decoration:none;font-size:0.83rem;font-weight:500;line-height:1;font-family:"Work Sans",sans-serif;';
+            el.innerHTML =
+              '<span style="width:27px;height:27px;min-width:27px;background:#d4a574;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.72rem;color:white;">' +
+              initial +
+              "</span><span>" +
+              username +
+              "</span>";
+          });
+        }
+
+        function lockField(id, value) {
+          var el = document.getElementById(id);
+          if (!el || !value) return;
+          el.value = value;
+          el.readOnly = true;
+          el.style.background = "#f5f0ea";
+          el.style.cursor = "not-allowed";
+          el.style.borderColor = "#d4a574";
+          el.title = "Pre-filled from your account";
+          var label = document.querySelector('label[for="' + id + '"]');
+          if (label && !label.querySelector(".lock-icon")) {
+            var lock = document.createElement("span");
+            lock.className = "lock-icon";
+            lock.innerHTML =
+              ' <i class="fas fa-lock" style="font-size:0.65rem;color:#d4a574;margin-left:0.25rem;"></i>';
+            label.appendChild(lock);
+          }
+        }
+
+        function applyAll(username, email) {
+          renderPill(username);
+          lockField("donor-name", username);
+          lockField("donor-email", email);
+        }
+
+        var cachedName = localStorage.getItem("username");
+        var cachedEmail = localStorage.getItem("userEmail");
+        if (cachedName && cachedEmail) {
+          applyAll(cachedName, cachedEmail);
+        } else {
+          fetch("/api/auth/me", {
+            headers: { Authorization: "Bearer " + token },
+          })
+            .then(function (r) {
+              return r.json();
+            })
+            .then(function (body) {
+              if (body.success && body.data) {
+                var u = body.data.username || "";
+                var e = body.data.email || "";
+                localStorage.setItem("username", u);
+                localStorage.setItem("userEmail", e);
+                localStorage.setItem(
+                  "isAdmin",
+                  body.data.isAdmin ? "true" : "false",
+                );
+                dest = body.data.isAdmin ? "admin.html" : "dashboard.html";
+                applyAll(u, e);
+              }
+            })
+            .catch(function () {
+              renderPill(cachedName || "");
+            });
+        }
+      })();
+    </script>
+  </body>
+</html>

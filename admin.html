@@ -1,0 +1,1658 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Admin Dashboard - Pawtner Hope Foundation"
+    />
+    <meta name="theme-color" content="#d4a574" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="shortcut icon" href="/favicon.svg?v=2" />
+    <title>Admin Dashboard - Pawtner Hope Foundation</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+
+      :root {
+        --primary: #d4a574;
+        --primary-dark: #b8844f;
+        --secondary: #8b6f47;
+        --accent: #e8d5c4;
+        --dark: #2c2416;
+        --light: #faf8f5;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Work Sans", sans-serif;
+        color: var(--dark);
+        background: var(--light);
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Playfair Display", serif;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 260px;
+        background: linear-gradient(
+          180deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        padding: 2rem 0;
+        overflow-y: auto;
+      }
+
+      .main-content {
+        margin-left: 260px;
+        padding: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+          transition: transform 0.3s ease;
+          z-index: 1000;
+          background: linear-gradient(
+            180deg,
+            var(--primary),
+            var(--primary-dark)
+          );
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 2rem;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+      }
+
+      .nav-item:hover,
+      .nav-item.active {
+        background: rgba(255, 255, 255, 0.1);
+        border-left-color: white;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .table-container {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th {
+        text-align: left;
+        padding: 1rem;
+        border-bottom: 2px solid #e5e7eb;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        color: var(--secondary);
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+      }
+
+      tbody tr:hover {
+        background: #fafafa;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .badge-success {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .badge-warning {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .badge-info {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 0.875rem;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn-danger {
+        background: #ef4444;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #dc2626;
+      }
+
+      .btn-secondary {
+        background: #6b7280;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #4b5563;
+      }
+
+      .btn-refresh {
+        padding: 0.45rem 0.8rem;
+        border-radius: 10px;
+        border: 1px solid #e3d8cc;
+        background: #fff;
+        color: #6a5944;
+        font-size: 0.82rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .btn-refresh:hover {
+        background: #f7f3ef;
+      }
+
+      .btn-refresh:disabled {
+        opacity: 0.75;
+        cursor: not-allowed;
+      }
+
+      .btn-refresh .fa-spin {
+        color: var(--primary-dark);
+      }
+
+      .toast {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 1200;
+        padding: 0.65rem 0.9rem;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 0.85rem;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transform: translateY(8px);
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+        pointer-events: none;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .toast.success {
+        background: #166534;
+      }
+
+      .toast.error {
+        background: #b91c1c;
+      }
+
+      .btn-logout {
+        background: rgba(44, 36, 22, 0.24);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        color: #fff;
+      }
+
+      .btn-logout:hover {
+        background: rgba(44, 36, 22, 0.4);
+      }
+
+      .table-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        flex-wrap: nowrap;
+      }
+
+      .action-btn {
+        padding: 0.38rem 0.72rem;
+        font-size: 0.8rem;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        white-space: nowrap;
+      }
+
+      .icon-btn {
+        width: 2.15rem;
+        height: 2.15rem;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+      }
+
+      .msg-btn {
+        background: #f2f0ed;
+        color: #5b4a36;
+        border: 1px solid #e1d8cf;
+        padding: 0.32rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        white-space: nowrap;
+      }
+
+      .msg-btn:hover {
+        background: #e8dfd6;
+      }
+
+      .inquiry-message {
+        background: #f8f6f3;
+        border: 1px solid #ece5dd;
+        border-radius: 10px;
+        padding: 0.9rem;
+        white-space: pre-wrap;
+        line-height: 1.5;
+      }
+
+      .inquiry-meta {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        margin: 0.8rem 0 1rem;
+      }
+
+      .inquiry-meta-item {
+        background: #faf8f5;
+        border: 1px solid #f0e7dc;
+        border-radius: 10px;
+        padding: 0.65rem 0.75rem;
+      }
+
+      .inquiry-meta-item .label {
+        display: block;
+        font-size: 0.72rem;
+        color: #7b6c59;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .inquiry-meta-item .value {
+        display: block;
+        margin-top: 0.15rem;
+        font-size: 0.9rem;
+        color: #2c2416;
+      }
+
+      @media (max-width: 640px) {
+        .inquiry-meta {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .section {
+        display: none;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      /* Modal */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+      .modal {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        width: 100%;
+        max-width: 540px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      .form-group label {
+        display: block;
+        font-weight: 600;
+        font-size: 0.875rem;
+        margin-bottom: 0.375rem;
+        color: var(--dark);
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.6rem 0.875rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        transition: border-color 0.2s;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="px-8 mb-8">
+        <div class="flex items-center gap-3 mb-2">
+          <div
+            class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center"
+          >
+            <i class="fas fa-paw text-2xl"></i>
+          </div>
+          <span class="text-xl font-bold">Pawtner Hope</span>
+        </div>
+        <p class="text-white/70 text-sm">Admin Dashboard</p>
+      </div>
+
+      <nav>
+        <a href="#" class="nav-item active" data-section="overview">
+          <i class="fas fa-chart-line"></i>
+          <span>Overview</span>
+        </a>
+        <a href="#" class="nav-item" data-section="pets">
+          <i class="fas fa-paw"></i>
+          <span>Manage Pets</span>
+        </a>
+        <a href="#" class="nav-item" data-section="adoptions">
+          <i class="fas fa-home"></i>
+          <span>Adoptions</span>
+        </a>
+        <a href="#" class="nav-item" data-section="bookings">
+          <i class="fas fa-calendar-check"></i>
+          <span>Bookings</span>
+        </a>
+        <a href="#" class="nav-item" data-section="donations">
+          <i class="fas fa-heart"></i>
+          <span>Donations</span>
+        </a>
+        <a href="#" class="nav-item" data-section="messages">
+          <i class="fas fa-envelope"></i>
+          <span>Messages</span>
+        </a>
+      </nav>
+
+      <div class="px-8 mt-auto absolute bottom-8">
+        <button
+          onclick="logout()"
+          class="btn btn-logout w-full flex items-center justify-center gap-2"
+        >
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" class="md:hidden mb-4 btn btn-primary">
+        <i class="fas fa-bars"></i> Menu
+      </button>
+
+      <!-- Overview Section -->
+      <section id="overview" class="section active">
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold mb-2">Dashboard Overview</h1>
+          <p class="text-gray-600">
+            Welcome back! Here's what's happening today.
+          </p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="stat-card">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-3xl" style="color: var(--primary)">
+                <i class="fas fa-paw"></i>
+              </div>
+              <span class="text-2xl font-bold" id="stat-pets">0</span>
+            </div>
+            <p class="text-gray-600 text-sm">Total Pets</p>
+          </div>
+
+          <div class="stat-card">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-3xl" style="color: var(--primary)">
+                <i class="fas fa-home"></i>
+              </div>
+              <span class="text-2xl font-bold" id="stat-adoptions">0</span>
+            </div>
+            <p class="text-gray-600 text-sm">Adoption Inquiries</p>
+          </div>
+
+          <div class="stat-card">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-3xl" style="color: var(--primary)">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+              <span class="text-2xl font-bold" id="stat-bookings">0</span>
+            </div>
+            <p class="text-gray-600 text-sm">Service Bookings</p>
+          </div>
+
+          <div class="stat-card">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-3xl" style="color: var(--primary)">
+                <i class="fas fa-users"></i>
+              </div>
+              <span class="text-2xl font-bold" id="stat-users">0</span>
+            </div>
+            <p class="text-gray-600 text-sm">Total Users</p>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="table-container">
+          <h2 class="text-xl font-bold mb-4">Recent Adoption Inquiries</h2>
+          <div id="recent-adoptions">Loading...</div>
+        </div>
+      </section>
+
+      <!-- Pets Section -->
+      <section id="pets" class="section">
+        <div class="mb-8 flex items-center justify-between">
+          <div>
+            <h1 class="text-3xl font-bold mb-2">Manage Pets</h1>
+            <p class="text-gray-600">View and manage all pets in the system</p>
+          </div>
+          <button
+            onclick="openPetModal()"
+            class="btn btn-primary flex items-center gap-2"
+          >
+            <i class="fas fa-plus"></i> Add Pet
+          </button>
+        </div>
+
+        <div class="table-container">
+          <div id="pets-table">Loading...</div>
+        </div>
+      </section>
+
+      <!-- Adoptions Section -->
+      <section id="adoptions" class="section">
+        <div class="mb-8 flex items-center justify-between gap-4">
+          <div>
+            <h1 class="text-3xl font-bold mb-2">Adoption Inquiries</h1>
+            <p class="text-gray-600">Manage adoption requests</p>
+          </div>
+          <button
+            class="btn-refresh"
+            onclick="refreshSection('adoptions', this)"
+          >
+            <i class="fas fa-rotate-right"></i> Refresh
+          </button>
+        </div>
+
+        <div class="table-container">
+          <div id="adoptions-table">Loading...</div>
+        </div>
+      </section>
+
+      <!-- Bookings Section -->
+      <section id="bookings" class="section">
+        <div class="mb-8 flex items-center justify-between gap-4">
+          <div>
+            <h1 class="text-3xl font-bold mb-2">Service Bookings</h1>
+            <p class="text-gray-600">Manage service appointments</p>
+          </div>
+          <button
+            class="btn-refresh"
+            onclick="refreshSection('bookings', this)"
+          >
+            <i class="fas fa-rotate-right"></i> Refresh
+          </button>
+        </div>
+
+        <div class="table-container">
+          <div id="bookings-table">Loading...</div>
+        </div>
+      </section>
+
+      <!-- Donations Section -->
+      <section id="donations" class="section">
+        <div class="mb-8 flex items-center justify-between gap-4">
+          <div>
+            <h1 class="text-3xl font-bold mb-2">Donations</h1>
+            <p class="text-gray-600">View donation history</p>
+          </div>
+          <button
+            class="btn-refresh"
+            onclick="refreshSection('donations', this)"
+          >
+            <i class="fas fa-rotate-right"></i> Refresh
+          </button>
+        </div>
+
+        <div class="table-container">
+          <div id="donations-table">Loading...</div>
+        </div>
+      </section>
+
+      <!-- Messages Section -->
+      <section id="messages" class="section">
+        <div class="mb-8 flex items-center justify-between gap-4">
+          <div>
+            <h1 class="text-3xl font-bold mb-2">Contact Messages</h1>
+            <p class="text-gray-600">Messages from visitors</p>
+          </div>
+          <button
+            class="btn-refresh"
+            onclick="refreshSection('messages', this)"
+          >
+            <i class="fas fa-rotate-right"></i> Refresh
+          </button>
+        </div>
+
+        <div class="table-container">
+          <div id="messages-table">
+            <p class="text-gray-500 text-center py-8">
+              Contact messages will be displayed here
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Pet Add/Edit Modal -->
+    <div class="modal-overlay" id="pet-modal-overlay">
+      <div class="modal">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold" id="pet-modal-title">Add Pet</h2>
+          <button
+            onclick="closePetModal()"
+            class="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+          >
+            &times;
+          </button>
+        </div>
+        <form id="pet-form" onsubmit="savePet(event)">
+          <input type="hidden" id="pet-id" />
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-group">
+              <label>Name *</label>
+              <input
+                type="text"
+                id="pet-name"
+                required
+                placeholder="e.g. Max"
+              />
+            </div>
+            <div class="form-group">
+              <label>Species *</label>
+              <select id="pet-species" required>
+                <option value="">Select…</option>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+                <option value="Bird">Bird</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Breed *</label>
+              <input
+                type="text"
+                id="pet-breed"
+                required
+                placeholder="e.g. Golden Retriever"
+              />
+            </div>
+            <div class="form-group">
+              <label>Age (years) *</label>
+              <input
+                type="number"
+                id="pet-age"
+                required
+                min="0"
+                max="30"
+                placeholder="e.g. 3"
+              />
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select id="pet-gender">
+                <option value="">Select…</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Status *</label>
+              <select id="pet-status" required>
+                <option value="Available">Available</option>
+                <option value="Under Care">Under Care</option>
+                <option value="Adopted">Adopted</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea
+              id="pet-description"
+              rows="3"
+              placeholder="Brief description of the pet…"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label>Image URL (optional)</label>
+            <input
+              type="url"
+              id="pet-image-url"
+              placeholder="https://example.com/pet-photo.jpg"
+            />
+          </div>
+          <div class="form-group flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="pet-vaccinated"
+              class="w-4 h-4"
+              style="width: 1rem; height: 1rem"
+            />
+            <label for="pet-vaccinated" style="margin: 0">Vaccinated</label>
+          </div>
+          <div class="flex gap-3 mt-6 justify-end">
+            <button
+              type="button"
+              onclick="closePetModal()"
+              class="btn btn-secondary"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary" id="pet-save-btn">
+              Save Pet
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Contact Message Modal -->
+    <div class="modal-overlay" id="message-modal-overlay">
+      <div class="modal">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-2xl font-bold">Contact Message</h2>
+          <button
+            onclick="closeMessageModal()"
+            class="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+          >
+            &times;
+          </button>
+        </div>
+        <p class="text-sm text-gray-600 mb-2" id="message-modal-id"></p>
+        <div class="inquiry-meta" id="message-modal-meta"></div>
+        <h3 class="font-semibold mb-2 mt-4">Message</h3>
+        <div class="inquiry-message mb-5" id="message-modal-body">-</div>
+        <div class="flex justify-end">
+          <button type="button" class="btn btn-secondary" onclick="closeMessageModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Service Booking Review Modal -->
+    <div class="modal-overlay" id="booking-modal-overlay">
+      <div class="modal">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-2xl font-bold">Service Booking</h2>
+          <button
+            onclick="closeBookingModal()"
+            class="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+          >
+            &times;
+          </button>
+        </div>
+        <p class="text-sm text-gray-600 mb-2" id="booking-modal-id"></p>
+        <div class="inquiry-meta" id="booking-modal-meta"></div>
+        <h3 class="font-semibold mb-2 mt-4">Notes</h3>
+        <div class="inquiry-message mb-5" id="booking-modal-notes">-</div>
+        <div class="flex justify-end">
+          <button type="button" class="btn btn-secondary" onclick="closeBookingModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adoption Inquiry Modal -->
+    <div class="modal-overlay" id="inquiry-modal-overlay">
+      <div class="modal">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-2xl font-bold">Adoption Inquiry</h2>
+          <button
+            onclick="closeInquiryModal()"
+            class="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+          >
+            &times;
+          </button>
+        </div>
+        <p class="text-sm text-gray-600 mb-2" id="inquiry-modal-seq-id"></p>
+        <div class="inquiry-meta" id="inquiry-modal-meta"></div>
+        <h3 class="font-semibold mb-2">Message</h3>
+        <div class="inquiry-message mb-5" id="inquiry-modal-message">-</div>
+        <div class="flex flex-wrap gap-2 justify-end">
+          <button
+            type="button"
+            class="btn btn-secondary inquiry-status-btn"
+            onclick="setInquiryStatus('Pending')"
+          >
+            Mark Pending
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger inquiry-status-btn"
+            onclick="setInquiryStatus('Rejected')"
+          >
+            Reject
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary inquiry-status-btn"
+            onclick="setInquiryStatus('Approved')"
+          >
+            Approve
+          </button>
+        </div>
+      </div>
+    </div>
+    <script>
+      // ── Pet CRUD helpers ─────────────────────────────────────────────────────
+      let petModalMode = "add"; // 'add' | 'edit'
+      let _adoptionsCache = [];
+      let _bookingsCache = [];
+      let _messagesCache = [];
+      let _activeInquiryId = "";
+      let _statusUpdateInFlight = false;
+
+      function openPetModal(pet) {
+        petModalMode = pet ? "edit" : "add";
+        document.getElementById("pet-modal-title").textContent = pet
+          ? "Edit Pet"
+          : "Add Pet";
+        document.getElementById("pet-id").value = pet ? pet.id : "";
+        document.getElementById("pet-name").value = pet ? pet.name : "";
+        document.getElementById("pet-species").value = pet ? pet.species : "";
+        document.getElementById("pet-breed").value = pet ? pet.breed : "";
+        document.getElementById("pet-age").value = pet ? pet.age : "";
+        document.getElementById("pet-gender").value = pet ? pet.gender : "";
+        document.getElementById("pet-status").value = pet
+          ? pet.status
+          : "Available";
+        document.getElementById("pet-image-url").value = pet
+          ? pet.imageUrl || ""
+          : "";
+        document.getElementById("pet-description").value = pet
+          ? pet.description
+          : "";
+        document.getElementById("pet-vaccinated").checked = pet
+          ? pet.isVaccinated
+          : false;
+        document.getElementById("pet-modal-overlay").classList.add("open");
+      }
+
+      function closePetModal() {
+        document.getElementById("pet-modal-overlay").classList.remove("open");
+      }
+
+      async function savePet(e) {
+        e.preventDefault();
+        const id = document.getElementById("pet-id").value;
+        const body = {
+          name: document.getElementById("pet-name").value,
+          species: document.getElementById("pet-species").value,
+          breed: document.getElementById("pet-breed").value,
+          age: parseInt(document.getElementById("pet-age").value, 10),
+          gender: document.getElementById("pet-gender").value,
+          status: document.getElementById("pet-status").value,
+          imageUrl: document.getElementById("pet-image-url").value.trim(),
+          description: document.getElementById("pet-description").value,
+          isVaccinated: document.getElementById("pet-vaccinated").checked,
+        };
+
+        const btn = document.getElementById("pet-save-btn");
+        btn.disabled = true;
+        btn.textContent = "Saving…";
+
+        try {
+          const url = id ? `/api/pets/${id}` : "/api/pets";
+          const method = id ? "PUT" : "POST";
+          const res = await authFetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          const data = await res.json();
+          if (!data.success) throw new Error(data.message || "Failed");
+          closePetModal();
+          loadPets();
+        } catch (err) {
+          alert("Error: " + err.message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Save Pet";
+        }
+      }
+
+      async function deletePet(id, name) {
+        if (!confirm(`Delete ${name}? This cannot be undone.`)) return;
+        try {
+          const res = await authFetch(`/api/pets/${id}`, { method: "DELETE" });
+          const data = await res.json();
+          if (!data.success) throw new Error(data.message || "Failed");
+          loadPets();
+        } catch (err) {
+          alert("Error deleting pet: " + err.message);
+        }
+      }
+
+      // Close modal when clicking outside
+      document
+        .getElementById("pet-modal-overlay")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closePetModal();
+        });
+
+      function getAuthToken() {
+        return localStorage.getItem("authToken") || "";
+      }
+
+      function authFetch(url, options = {}) {
+        const token = getAuthToken();
+        const headers = Object.assign({}, options.headers || {});
+        if (token) {
+          headers.Authorization = `Bearer ${token}`;
+        }
+        return fetch(
+          url,
+          Object.assign({ cache: "no-store" }, options, { headers }),
+        );
+      }
+
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => {
+          toast.classList.add("show");
+        });
+
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => {
+            toast.remove();
+          }, 250);
+        }, 1800);
+      }
+
+      function setRefreshButtonLoading(button, isLoading) {
+        if (!button) return;
+        const icon = button.querySelector("i");
+
+        button.disabled = isLoading;
+        if (icon) {
+          if (isLoading) {
+            icon.classList.add("fa-spin");
+          } else {
+            icon.classList.remove("fa-spin");
+          }
+        }
+      }
+
+      async function refreshSection(section, button) {
+        setRefreshButtonLoading(button, true);
+        const ok = await loadSectionData(section);
+        setRefreshButtonLoading(button, false);
+
+        if (ok) {
+          showToast(
+            `${section.charAt(0).toUpperCase() + section.slice(1)} refreshed`,
+          );
+        } else {
+          showToast(`Failed to refresh ${section}`, "error");
+        }
+      }
+
+      async function enforceAdminAccess() {
+        const token = getAuthToken();
+        if (!token) {
+          window.location.href = "auth.html";
+          return false;
+        }
+
+        try {
+          const res = await authFetch("/api/auth/me");
+          const payload = await res.json();
+          if (!res.ok || !payload.success || !payload.data) {
+            throw new Error(payload.message || "Unauthorized");
+          }
+
+          const isAdmin = payload.data.isadmin === true;
+          localStorage.setItem("isAdmin", isAdmin ? "true" : "false");
+          localStorage.setItem("userRole", payload.data.role || "user");
+
+          if (!isAdmin) {
+            window.location.href = "dashboard.html";
+            return false;
+          }
+
+          return true;
+        } catch (_) {
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("isAdmin");
+          window.location.href = "auth.html";
+          return false;
+        }
+      }
+
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const sidebar = document.getElementById("sidebar");
+
+      if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("active");
+        });
+      }
+
+      // Navigation
+      const navItems = document.querySelectorAll(".nav-item");
+      const sections = document.querySelectorAll(".section");
+
+      navItems.forEach((item) => {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
+          const targetSection = item.dataset.section;
+
+          // Update active states
+          navItems.forEach((nav) => nav.classList.remove("active"));
+          item.classList.add("active");
+
+          sections.forEach((section) => {
+            section.classList.remove("active");
+            if (section.id === targetSection) {
+              section.classList.add("active");
+            }
+          });
+
+          // Load data for the section
+          loadSectionData(targetSection);
+
+          // Close mobile menu
+          if (window.innerWidth < 768) {
+            sidebar.classList.remove("active");
+          }
+        });
+      });
+
+      // Logout function
+      function logout() {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("isAdmin");
+        localStorage.removeItem("username");
+        localStorage.removeItem("userEmail");
+        window.location.href = "auth.html";
+      }
+
+      // Load statistics
+      async function loadStatistics() {
+        try {
+          const response = await authFetch("/api/statistics");
+          const res = await response.json();
+          const stats = res.data || {};
+
+          document.getElementById("stat-pets").textContent =
+            stats.totalPets || 0;
+          document.getElementById("stat-adoptions").textContent =
+            stats.totalInquiries || 0;
+          document.getElementById("stat-bookings").textContent =
+            stats.totalBookings || 0;
+          document.getElementById("stat-users").textContent =
+            stats.totalUsers || 0;
+          return true;
+        } catch (error) {
+          console.error("Error loading statistics:", error);
+          return false;
+        }
+      }
+
+      // Load section data
+      async function loadSectionData(section) {
+        switch (section) {
+          case "overview":
+            return (await loadStatistics()) && (await loadRecentAdoptions());
+          case "pets":
+            return await loadPets();
+          case "adoptions":
+            return await loadAdoptions();
+          case "bookings":
+            return await loadBookings();
+          case "donations":
+            return await loadDonations();
+          case "messages":
+            return await loadMessages();
+          default:
+            return false;
+        }
+      }
+
+      // Load recent adoptions
+      async function loadRecentAdoptions() {
+        try {
+          const response = await authFetch("/api/adoptions");
+          const res = await response.json();
+          const adoptions = res.data || [];
+
+          if (!adoptions || adoptions.length === 0) {
+            document.getElementById("recent-adoptions").innerHTML =
+              '<p class="text-gray-500 text-center py-4">No adoption inquiries yet</p>';
+            return true;
+          }
+
+          const recentAdoptions = adoptions.slice(0, 5);
+          document.getElementById("recent-adoptions").innerHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>Pet ID</th>
+                  <th>Adopter Name</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${recentAdoptions
+                  .map(
+                    (adoption) => `
+                  <tr>
+                    <td>${adoption.petId}</td>
+                    <td>${adoption.adopterName}</td>
+                    <td>${adoption.phone}</td>
+                    <td><span class="badge badge-${adoption.status === "Pending" ? "warning" : adoption.status === "Approved" ? "success" : "info"}">${adoption.status}</span></td>
+                    <td>${new Date(adoption.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                `,
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          `;
+          return true;
+        } catch (error) {
+          console.error("Error loading adoptions:", error);
+          document.getElementById("recent-adoptions").innerHTML =
+            '<p class="text-red-500 text-center py-4">Failed to load adoption inquiries</p>';
+          return false;
+        }
+      }
+
+      // Holds latest pet list so edit buttons can look up full pet objects
+      let _petsCache = [];
+
+      // Load pets
+      async function loadPets() {
+        try {
+          const response = await authFetch("/api/pets");
+          const res = await response.json();
+          const pets = res.data || [];
+          _petsCache = pets;
+
+          if (pets.length === 0) {
+            document.getElementById("pets-table").innerHTML =
+              '<p class="text-gray-500 text-center py-8">No pets found. Click "Add Pet" to add one.</p>';
+            return true;
+          }
+
+          document.getElementById("pets-table").innerHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Species</th>
+                  <th>Breed</th>
+                  <th>Age</th>
+                  <th>Status</th>
+                  <th>Vaccinated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${pets
+                  .map(
+                    (pet) => `
+                  <tr>
+                    <td style="font-family:monospace;font-size:0.8rem;">${pet.id}</td>
+                    <td><strong>${pet.name}</strong></td>
+                    <td>${pet.species}</td>
+                    <td>${pet.breed}</td>
+                    <td>${pet.age}y</td>
+                    <td><span class="badge badge-${pet.status === "Available" ? "success" : pet.status === "Adopted" ? "info" : "warning"}">${pet.status}</span></td>
+                    <td>${pet.isVaccinated ? '<span style="color:#166534;">✓ Yes</span>' : '<span style="color:#92400e;">✗ No</span>'}</td>
+                    <td>
+                      <div class="table-actions">
+                        <button onclick="editPetById('${pet.id}')" class="btn btn-primary action-btn">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button onclick="deletePet('${pet.id}','${pet.name.replace(/'/g, "\\\'")}')" class="btn btn-danger icon-btn" aria-label="Delete ${pet.name}">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `,
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          `;
+          return true;
+        } catch (error) {
+          console.error("Error loading pets:", error);
+          document.getElementById("pets-table").innerHTML =
+            '<p class="text-red-500 text-center py-8">Failed to load pets</p>';
+          return false;
+        }
+      }
+
+      function editPetById(id) {
+        const pet = _petsCache.find((p) => p.id === id);
+        if (pet) openPetModal(pet);
+      }
+
+      // Load adoptions
+      async function loadAdoptions() {
+        try {
+          const response = await authFetch("/api/adoptions");
+          const res = await response.json();
+          if (!response.ok || !res.success) {
+            throw new Error(res.message || "Failed to load adoption inquiries");
+          }
+          const adoptions = res.data || [];
+          _adoptionsCache = adoptions;
+
+          if (!adoptions || adoptions.length === 0) {
+            document.getElementById("adoptions-table").innerHTML =
+              '<p class="text-gray-500 text-center py-8">No adoption inquiries yet</p>';
+            return true;
+          }
+
+          document.getElementById("adoptions-table").innerHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Pet ID</th>
+                  <th>Adopter Name</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Message</th>
+                  <th>Actions</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${adoptions
+                  .map(
+                    (adoption, index) => `
+                  <tr>
+                    <td>${index + 1}</td>
+                    <td>${adoption.petId}</td>
+                    <td>${adoption.adopterName}</td>
+                    <td>${adoption.phone}</td>
+                    <td><span class="badge badge-${adoption.status === "Pending" ? "warning" : adoption.status === "Approved" ? "success" : "info"}">${adoption.status}</span></td>
+                    <td>
+                      ${adoption.message ? `${adoption.message.substring(0, 48)}${adoption.message.length > 48 ? "..." : ""}` : '<span class="text-gray-400">-</span>'}
+                    </td>
+                    <td>
+                      <button class="btn btn-secondary action-btn" onclick="openInquiryModal('${adoption.id}')">
+                        <i class="fas fa-eye"></i> Review
+                      </button>
+                    </td>
+                    <td>${new Date(adoption.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                `,
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          `;
+          return true;
+        } catch (error) {
+          console.error("Error loading adoptions:", error);
+          document.getElementById("adoptions-table").innerHTML =
+            '<p class="text-red-500 text-center py-8">Failed to load adoption inquiries</p>';
+          return false;
+        }
+      }
+
+      // Load bookings
+      async function loadBookings() {
+        try {
+          const response = await authFetch("/api/bookings");
+          const res = await response.json();
+          if (!response.ok || !res.success) {
+            throw new Error(res.message || "Failed to load bookings");
+          }
+          const bookings = res.data || [];
+
+          if (!bookings || bookings.length === 0) {
+            document.getElementById("bookings-table").innerHTML =
+              '<p class="text-gray-500 text-center py-8">No bookings yet</p>';
+            return true;
+          }
+
+          _bookingsCache = bookings;
+          document.getElementById("bookings-table").innerHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Service ID</th>
+                  <th>Pet Name</th>
+                  <th>Owner</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${bookings
+                  .map(
+                    (b) => `
+                  <tr>
+                    <td>${b.id}</td>
+                    <td>${b.serviceId}</td>
+                    <td>${b.petName || "-"}</td>
+                    <td>${b.ownerName}</td>
+                    <td>${b.date || new Date(b.bookedAt).toLocaleDateString()}</td>
+                    <td><span class="badge badge-${b.status === "Pending" ? "warning" : "success"}">${b.status}</span></td>
+                    <td>
+                      <button class="btn btn-secondary action-btn" onclick="openBookingModal('${b.id}')">
+                        <i class="fas fa-eye"></i> Review
+                      </button>
+                    </td>
+                  </tr>
+                `,
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          `;
+          return true;
+        } catch (error) {
+          console.error("Error loading bookings:", error);
+          document.getElementById("bookings-table").innerHTML =
+            '<p class="text-red-500 text-center py-8">Failed to load bookings</p>';
+          return false;
+        }
+      }
+
+      // Load donations
+      async function loadDonations() {
+        try {
+          const response = await authFetch("/api/donations");
+          const res = await response.json();
+          if (!response.ok || !res.success) {
+            throw new Error(res.message || "Failed to load donations");
+          }
+          const donations = res.data || [];
+
+          if (!donations || donations.length === 0) {
+            document.getElementById("donations-table").innerHTML =
+              '<p class="text-gray-500 text-center py-8">No donations yet</p>';
+            return true;
+          }
+
+          document.getElementById("donations-table").innerHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Donor Name</th>
+                  <th>Email</th>
+                  <th>Amount</th>
+                  <th>Payment Method</th>
+                  <th>Transaction ID</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${donations
+                  .map(
+                    (donation) => `
+                  <tr>
+                    <td>${donation.id}</td>
+                    <td>${donation.donorName}</td>
+                    <td>${donation.donorEmail}</td>
+                    <td>₹${donation.amount.toLocaleString()}</td>
+                    <td>${donation.paymentMethod}</td>
+                    <td>${donation.transactionId}</td>
+                    <td><span class="badge badge-${donation.status === "Completed" ? "success" : donation.status === "Pending" ? "warning" : "info"}">${donation.status}</span></td>
+                    <td>${new Date(donation.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                `,
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          `;
+          return true;
+        } catch (error) {
+          console.error("Error loading donations:", error);
+          document.getElementById("donations-table").innerHTML =
+            '<p class="text-red-500 text-center py-8">Failed to load donations</p>';
+          return false;
+        }
+      }
+
+      async function loadMessages() {
+        try {
+          const response = await authFetch("/api/contact");
+          const res = await response.json();
+          if (!response.ok || !res.success) {
+            throw new Error(res.message || "Failed to load contact messages");
+          }
+          const messages = res.data || [];
+
+          if (!messages || messages.length === 0) {
+            document.getElementById("messages-table").innerHTML =
+              '<p class="text-gray-500 text-center py-8">No contact messages yet</p>';
+            return true;
+          }
+
+          _messagesCache = messages;
+          document.getElementById("messages-table").innerHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Purpose</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${messages
+                  .map(
+                    (msg, index) => `
+                  <tr>
+                    <td>${index + 1}</td>
+                    <td>${msg.name || "-"}</td>
+                    <td>${msg.purpose || "-"}</td>
+                    <td>${msg.sentAt ? new Date(msg.sentAt).toLocaleDateString() : "-"}</td>
+                    <td>
+                      <button class="btn btn-secondary action-btn" onclick="openMessageModal(${index})">
+                        <i class="fas fa-eye"></i> View
+                      </button>
+                    </td>
+                  </tr>
+                `,
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          `;
+          return true;
+        } catch (error) {
+          console.error("Error loading messages:", error);
+          document.getElementById("messages-table").innerHTML =
+            '<p class="text-red-500 text-center py-8">Failed to load contact messages</p>';
+          return false;
+        }
+      }
+
+      function closeMessageModal() {
+        document.getElementById("message-modal-overlay").classList.remove("open");
+      }
+
+      function openMessageModal(index) {
+        const msg = _messagesCache[index];
+        if (!msg) return;
+
+        document.getElementById("message-modal-id").textContent = `Message #${index + 1}`;
+        document.getElementById("message-modal-meta").innerHTML = `
+          <div class="inquiry-meta-item"><span class="label">Name</span><span class="value">${msg.name || "-"}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Email</span><span class="value">${msg.email || "-"}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Purpose</span><span class="value">${msg.purpose || "-"}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Sent</span><span class="value">${msg.sentAt ? new Date(msg.sentAt).toLocaleString() : "-"}</span></div>
+        `;
+        document.getElementById("message-modal-body").textContent = msg.message || "No message content.";
+        document.getElementById("message-modal-overlay").classList.add("open");
+      }
+
+      document.getElementById("message-modal-overlay").addEventListener("click", function (e) {
+        if (e.target === this) closeMessageModal();
+      });
+
+      function closeBookingModal() {
+        document.getElementById("booking-modal-overlay").classList.remove("open");
+      }
+
+      function openBookingModal(bookingID) {
+        const b = _bookingsCache.find((x) => x.id === bookingID);
+        if (!b) return;
+
+        document.getElementById("booking-modal-id").textContent = `Booking ${b.id}`;
+        document.getElementById("booking-modal-meta").innerHTML = `
+          <div class="inquiry-meta-item"><span class="label">Service</span><span class="value">${b.serviceId}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Status</span><span class="value">${b.status}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Owner</span><span class="value">${b.ownerName}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Email</span><span class="value">${b.email}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Phone</span><span class="value">${b.phone || "-"}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Pet Name</span><span class="value">${b.petName || "-"}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Date</span><span class="value">${b.date || "-"}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Time</span><span class="value">${b.time || "-"}</span></div>
+        `;
+        document.getElementById("booking-modal-notes").textContent = b.notes || "No notes provided.";
+        document.getElementById("booking-modal-overlay").classList.add("open");
+      }
+
+      document.getElementById("booking-modal-overlay").addEventListener("click", function (e) {
+        if (e.target === this) closeBookingModal();
+      });
+
+      function closeInquiryModal() {
+        _activeInquiryId = "";
+        document
+          .getElementById("inquiry-modal-overlay")
+          .classList.remove("open");
+      }
+
+      function openInquiryModal(inquiryID) {
+        const inquiry = _adoptionsCache.find((a) => a.id === inquiryID);
+        if (!inquiry) return;
+
+        _activeInquiryId = inquiry.id;
+        const sequenceNumber =
+          _adoptionsCache.findIndex((a) => a.id === inquiry.id) + 1;
+
+        document.getElementById("inquiry-modal-seq-id").textContent =
+          `Inquiry ID ${sequenceNumber}`;
+        document.getElementById("inquiry-modal-meta").innerHTML = `
+          <div class="inquiry-meta-item"><span class="label">Pet ID</span><span class="value">${inquiry.petId}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Status</span><span class="value">${inquiry.status}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Adopter</span><span class="value">${inquiry.adopterName}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Email</span><span class="value">${inquiry.email}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Phone</span><span class="value">${inquiry.phone || "-"}</span></div>
+          <div class="inquiry-meta-item"><span class="label">Submitted</span><span class="value">${new Date(inquiry.createdAt).toLocaleString()}</span></div>
+        `;
+        document.getElementById("inquiry-modal-message").textContent =
+          inquiry.message || "No message provided.";
+        document.getElementById("inquiry-modal-overlay").classList.add("open");
+      }
+
+      async function setInquiryStatus(status) {
+        if (!_activeInquiryId || _statusUpdateInFlight) return;
+        _statusUpdateInFlight = true;
+
+        const actionButtons = document.querySelectorAll(".inquiry-status-btn");
+        actionButtons.forEach((btn) => {
+          btn.disabled = true;
+        });
+
+        try {
+          const inquiryID = _activeInquiryId;
+          const response = await authFetch(
+            `/api/adoptions/${inquiryID}/status`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ status }),
+            },
+          );
+          const res = await response.json();
+          if (!response.ok || !res.success) {
+            throw new Error(res.message || "Failed to update inquiry status");
+          }
+
+          await loadAdoptions();
+          const updated = _adoptionsCache.find((a) => a.id === inquiryID);
+          if (!updated || updated.status !== status) {
+            throw new Error("Status change was not persisted on the server");
+          }
+
+          closeInquiryModal();
+          await loadRecentAdoptions();
+          await loadPets();
+          await loadStatistics();
+          showToast(`Inquiry marked as ${status}`);
+        } catch (error) {
+          showToast(`Error: ${error.message}`, "error");
+        } finally {
+          _statusUpdateInFlight = false;
+          actionButtons.forEach((btn) => {
+            btn.disabled = false;
+          });
+        }
+      }
+
+      document
+        .getElementById("inquiry-modal-overlay")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeInquiryModal();
+        });
+
+      // Initialize
+      (async function initializeAdminDashboard() {
+        const allowed = await enforceAdminAccess();
+        if (!allowed) return;
+        loadStatistics();
+        loadRecentAdoptions();
+      })();
+    </script>
+  </body>
+</html>

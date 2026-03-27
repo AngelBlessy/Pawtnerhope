@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"
+    />
+    <meta
+      name="description"
+      content="Adopt a Pet - Pawtner Hope Foundation. Find your perfect companion and give them a forever home."
+    />
+    <meta name="theme-color" content="#d4a574" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+    <link rel="shortcut icon" href="/favicon.svg?v=2" />
+    <title>Adopt a Pet - Pawtner Hope Foundation</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      @view-transition {
+        navigation: auto;
+      }
+
+      :root {
+        --primary: #d4a574;
+        --primary-dark: #b8844f;
+        --secondary: #8b6f47;
+        --accent: #e8d5c4;
+        --dark: #2c2416;
+        --light: #faf8f5;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Work Sans", sans-serif;
+        color: var(--dark);
+        background: var(--light);
+        overflow-x: hidden;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Playfair Display", serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      .nav-link {
+        position: relative;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+        padding: 0.875rem 2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        border: 2px solid var(--primary);
+        font-size: 0.95rem;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(212, 165, 116, 0.3);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--primary);
+        padding: 0.875rem 2rem;
+        border-radius: 50px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        border: 2px solid var(--primary);
+        font-size: 0.95rem;
+      }
+
+      .btn-secondary:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(212, 165, 116, 0.3);
+      }
+
+      .card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(212, 165, 116, 0.1);
+      }
+
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 60px rgba(44, 36, 22, 0.12);
+      }
+
+      .pet-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+      }
+
+      .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        overflow-y: auto;
+        padding: 2rem 1rem;
+      }
+
+      .modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 24px;
+        max-width: 900px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease-out;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .mobile-menu {
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .mobile-menu.active {
+        transform: translateX(0);
+      }
+
+      .filter-btn {
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        border: 2px solid #e5e7eb;
+        background: white;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .filter-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .filter-btn:hover {
+        border-color: var(--primary);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 w-full bg-white md:bg-white/95 md:backdrop-blur-md z-50 transition-all duration-300"
+    >
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+          <!-- Logo -->
+          <a href="index.html" class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--primary),
+                  var(--primary-dark)
+                );
+              "
+            >
+              <i class="fas fa-paw text-white text-xl"></i>
+            </div>
+            <span
+              class="text-xl font-semibold"
+              style="font-family: &quot;Playfair Display&quot;, serif"
+              >Pawtner Hope</span
+            >
+          </a>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden md:flex items-center space-x-8">
+            <a href="index.html" class="nav-link text-gray-700">Home</a>
+            <a
+              href="adoption.html"
+              class="nav-link"
+              style="color: var(--primary)"
+              >Adopt</a
+            >
+            <a href="service.html" class="nav-link text-gray-700">Services</a>
+            <a href="donate.html" class="nav-link text-gray-700">Donate</a>
+            <a href="index.html#contact" class="nav-link text-gray-700"
+              >Contact</a
+            >
+            <a id="nav-auth-btn" href="auth.html" class="btn-primary">Login</a>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button
+            id="mobile-menu-btn"
+            class="md:hidden text-gray-700 focus:outline-none"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div
+      id="mobile-menu"
+      class="mobile-menu md:hidden fixed top-0 right-0 bottom-0 w-64 bg-white shadow-2xl z-50"
+    >
+      <div class="p-6">
+        <button
+          id="mobile-menu-close"
+          class="absolute top-6 right-6 text-gray-700"
+        >
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+        <nav class="mt-8 space-y-4">
+          <a
+            href="index.html"
+            class="block py-2 text-gray-700 hover:text-amber-600"
+            >Home</a
+          >
+          <a
+            href="adoption.html"
+            class="block py-2 text-amber-600 hover:text-amber-600"
+            >Adopt</a
+          >
+          <a
+            href="service.html"
+            class="block py-2 text-gray-700 hover:text-amber-600"
+            >Services</a
+          >
+          <a
+            href="donate.html"
+            class="block py-2 text-gray-700 hover:text-amber-600"
+            >Donate</a
+          >
+          <a
+            href="index.html#contact"
+            class="block py-2 text-gray-700 hover:text-amber-600"
+            >Contact</a
+          >
+          <a
+            id="mobile-auth-btn"
+            href="auth.html"
+            class="block py-3 mt-4 text-center text-white rounded-full"
+            style="background: var(--primary)"
+            >Login</a
+          >
+        </nav>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section
+      class="pt-32 pb-16 px-6"
+      style="
+        background: linear-gradient(
+          135deg,
+          rgba(212, 165, 116, 0.1) 0%,
+          rgba(232, 213, 196, 0.2) 100%
+        );
+      "
+    >
+      <div class="max-w-7xl mx-auto text-center">
+        <h1
+          class="text-5xl md:text-6xl font-bold mb-6"
+          style="color: var(--dark)"
+        >
+          Find Your Perfect Companion
+        </h1>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Every pet deserves a loving home. Browse our available pets and start
+          your adoption journey today.
+        </p>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="py-8 px-6 bg-white border-b">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-wrap gap-4 justify-center">
+          <button class="filter-btn active" data-filter="all">All Pets</button>
+          <button class="filter-btn" data-filter="Dog">Dogs</button>
+          <button class="filter-btn" data-filter="Cat">Cats</button>
+          <button class="filter-btn" data-filter="Available">Available</button>
+          <button class="filter-btn" data-filter="vaccinated">
+            Vaccinated
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pets Grid -->
+    <section class="py-16 px-6">
+      <div class="max-w-7xl mx-auto">
+        <div
+          id="pets-container"
+          class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          <!-- Pets will be loaded dynamically -->
+          <div class="text-center col-span-full py-12">
+            <div
+              class="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4"
+              style="border-color: var(--primary)"
+            ></div>
+            <p class="text-gray-600">Loading pets...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Adoption Modal -->
+    <div id="adoption-modal" class="modal">
+      <div class="modal-content">
+        <div class="p-8">
+          <!-- Modal Header -->
+          <div class="flex justify-between items-start mb-6">
+            <div>
+              <h2
+                id="modal-title"
+                class="text-3xl font-bold mb-2"
+                style="color: var(--dark)"
+              >
+                Pet Details
+              </h2>
+              <p id="modal-subtitle" class="text-gray-600">
+                Review this pet profile before submitting an adoption inquiry.
+              </p>
+            </div>
+            <button
+              id="modal-close"
+              class="text-gray-400 hover:text-gray-600 text-2xl"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <!-- Pet Info Display -->
+          <div
+            id="modal-pet-info"
+            class="bg-amber-50 rounded-xl p-4 mb-6 flex items-center gap-4"
+          >
+            <!-- Will be populated with selected pet info -->
+          </div>
+
+          <div
+            id="pet-details-card"
+            class="bg-white border rounded-xl p-5 mb-4"
+          >
+            <p id="modal-pet-description" class="text-gray-600 mb-4"></p>
+            <div id="modal-pet-tags" class="flex gap-2 mb-4 flex-wrap"></div>
+            <div class="grid grid-cols-2 gap-3 text-sm text-gray-700 mb-4">
+              <div>
+                <strong>Species:</strong> <span id="modal-pet-species"></span>
+              </div>
+              <div>
+                <strong>Gender:</strong> <span id="modal-pet-gender"></span>
+              </div>
+              <div>
+                <strong>Status:</strong> <span id="modal-pet-status"></span>
+              </div>
+              <div>
+                <strong>Vaccination:</strong>
+                <span id="modal-pet-vaccinated"></span>
+              </div>
+            </div>
+            <button id="details-start-adoption" class="btn-primary w-full">
+              Proceed With Adoption Request
+            </button>
+          </div>
+
+          <!-- Adoption Form -->
+          <form id="adoption-form" class="hidden">
+            <div class="space-y-5">
+              <!-- Your Name -->
+              <div>
+                <label
+                  for="adopter-name"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Your Full Name *
+                </label>
+                <input
+                  type="text"
+                  id="adopter-name"
+                  name="adopterName"
+                  required
+                  class="form-input"
+                  placeholder="John Doe"
+                />
+              </div>
+
+              <!-- Email -->
+              <div>
+                <label
+                  for="adopter-email"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  id="adopter-email"
+                  name="email"
+                  required
+                  class="form-input"
+                  placeholder="john@example.com"
+                />
+              </div>
+
+              <!-- Phone -->
+              <div>
+                <label
+                  for="adopter-phone"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  id="adopter-phone"
+                  name="phone"
+                  required
+                  class="form-input"
+                  placeholder="999-999-9999"
+                />
+              </div>
+
+              <!-- Message -->
+              <div>
+                <label
+                  for="adopter-message"
+                  class="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Why do you want to adopt this pet? *
+                </label>
+                <textarea
+                  id="adopter-message"
+                  name="message"
+                  required
+                  class="form-textarea"
+                  placeholder="Tell us about yourself, your home, and why you'd be a great match for this pet..."
+                ></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="btn-primary w-full">
+                Submit Adoption Inquiry
+              </button>
+            </div>
+          </form>
+
+          <div
+            id="adoption-success"
+            class="hidden bg-green-50 border-2 border-green-200 text-green-800 px-4 py-4 rounded-xl text-center"
+          >
+            <i class="fas fa-check-circle mr-2"></i>
+            Your adoption request has been submitted successfully. We review
+            requests on a first-come, first-served (FCFS) basis.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 bg-gray-900 text-white">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center">
+          <div class="flex items-center justify-center space-x-3 mb-4">
+            <div
+              class="w-10 h-10 rounded-full flex items-center justify-center"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  var(--primary),
+                  var(--primary-dark)
+                );
+              "
+            >
+              <i class="fas fa-paw text-white text-xl"></i>
+            </div>
+            <span
+              class="text-xl font-semibold"
+              style="font-family: &quot;Playfair Display&quot;, serif"
+              >Pawtner Hope Foundation</span
+            >
+          </div>
+          <p class="text-gray-400 mb-6">Spreading love, one paw at a time</p>
+
+          <!-- Quick Links -->
+          <div class="flex flex-wrap justify-center gap-6 mb-6 text-sm">
+            <a
+              href="index.html"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Home</a
+            >
+            <a href="adoption.html" class="text-amber-400">Adopt</a>
+            <a
+              href="service.html"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Services</a
+            >
+            <a
+              href="donate.html"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Donate</a
+            >
+            <a
+              href="service.html#contact"
+              class="text-gray-400 hover:text-amber-400 transition"
+              >Contact</a
+            >
+          </div>
+
+          <p class="text-gray-500 text-sm">
+            © 2024 Pawtner Hope Foundation. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/pet-images.js?v=2"></script>
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileMenuClose = document.getElementById("mobile-menu-close");
+      const mobileLinks = mobileMenu.querySelectorAll("a");
+
+      mobileMenuBtn.addEventListener("click", () => {
+        mobileMenu.classList.add("active");
+      });
+
+      mobileMenuClose.addEventListener("click", () => {
+        mobileMenu.classList.remove("active");
+      });
+
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("active");
+        });
+      });
+
+      if (typeof window.getPetImageUrl !== "function") {
+        const localPetImages = {
+          dog: [
+            "https://images.unsplash.com/photo-1558788353-f76d92427f16?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=500&q=80",
+          ],
+          cat: [
+            "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1494256997604-768d1f608cac?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1478098711619-5ab0b478d6e6?auto=format&fit=crop&w=500&q=80",
+          ],
+          bird: [
+            "https://images.unsplash.com/photo-1552728089-57bdde30beb3?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1452570053594-1b985d6ea890?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=500&q=80",
+          ],
+          other: [
+            "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=500&q=80",
+          ],
+        };
+        window.getPetImageUrl = function (pet) {
+          const species = String((pet && pet.species) || "other").toLowerCase();
+          const pool = localPetImages[species] || localPetImages.other;
+          const numericPart =
+            Number(String((pet && pet.id) || "").replace(/\D/g, "")) || 0;
+          return pool[numericPart % pool.length];
+        };
+        window.getPetFallbackImageUrl = function () {
+          return "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=500&q=80";
+        };
+      }
+
+      // Global variables
+      let allPets = [];
+      let selectedPet = null;
+
+      // Load pets from API
+      async function loadPets() {
+        try {
+          const response = await fetch("/api/pets");
+          const json = await response.json();
+          allPets = json.data || [];
+          displayPets(allPets);
+
+          const urlParams = new URLSearchParams(window.location.search);
+          const petId = urlParams.get("petId");
+          if (petId && allPets.some((pet) => pet.id === petId)) {
+            openPetDetailsModal(petId);
+          }
+        } catch (error) {
+          console.error("Error loading pets:", error);
+          document.getElementById("pets-container").innerHTML =
+            '<p class="text-center text-gray-600 col-span-full">Unable to load pets. Please try again later.</p>';
+        }
+      }
+
+      // Display pets
+      function displayPets(pets) {
+        const container = document.getElementById("pets-container");
+
+        if (pets.length === 0) {
+          container.innerHTML =
+            '<p class="text-center text-gray-600 col-span-full">No pets found matching your filters.</p>';
+          return;
+        }
+
+        container.innerHTML = pets
+          .map(
+            (pet) => `
+              <div class="card">
+                <div class="relative overflow-hidden">
+                  <img
+                    src="${getPetImageUrl(pet)}"
+                    alt="${pet.name}"
+                    class="w-full h-64 object-cover"
+                    loading="lazy"
+                    onerror="this.src=getPetFallbackImageUrl()"
+                  >
+                  <div class="pet-badge">${pet.status}</div>
+                </div>
+                <div class="p-6">
+                  <h3 class="text-2xl font-semibold mb-2" style="color: var(--dark);">${pet.name}</h3>
+                  <p class="text-gray-600 mb-2">${pet.breed} • ${pet.age} year${pet.age !== 1 ? "s" : ""} old</p>
+                  <p class="text-gray-500 mb-4">${pet.description}</p>
+                  
+                  <div class="flex gap-2 mb-4 flex-wrap">
+                    ${pet.tags.map((tag) => `<span class="px-3 py-1 bg-amber-50 text-amber-700 text-sm rounded-full">${tag}</span>`).join("")}
+                  </div>
+
+                  <div class="flex items-center gap-3 mb-4 text-sm text-gray-600">
+                    <span><i class="fas fa-venus-mars mr-1"></i>${pet.gender}</span>
+                    <span><i class="fas fa-syringe mr-1"></i>${pet.isVaccinated ? "Vaccinated" : "Not Vaccinated"}</span>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3">
+                    <button onclick="openPetDetailsModal('${pet.id}')" class="btn-secondary w-full">View Details</button>
+                    <button
+                      onclick="openAdoptionModal('${pet.id}')"
+                      class="btn-primary w-full ${pet.status !== "Available" ? "opacity-50 cursor-not-allowed" : ""}"
+                      ${pet.status !== "Available" ? "disabled" : ""}
+                    >
+                      ${pet.status === "Available" ? "Start Adoption" : "Not Available"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `,
+          )
+          .join("");
+      }
+
+      // Filter functionality
+      const filterBtns = document.querySelectorAll(".filter-btn");
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Update active state
+          filterBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // Apply filter
+          const filter = btn.dataset.filter;
+          let filteredPets = allPets;
+
+          if (filter !== "all") {
+            if (filter === "vaccinated") {
+              filteredPets = allPets.filter((pet) => pet.isVaccinated);
+            } else {
+              filteredPets = allPets.filter(
+                (pet) => pet.species === filter || pet.status === filter,
+              );
+            }
+          }
+
+          displayPets(filteredPets);
+        });
+      });
+
+      // Modal functionality
+      const modal = document.getElementById("adoption-modal");
+      const modalClose = document.getElementById("modal-close");
+      const adoptionForm = document.getElementById("adoption-form");
+      const detailsCard = document.getElementById("pet-details-card");
+      const adoptionSuccess = document.getElementById("adoption-success");
+      const modalTitle = document.getElementById("modal-title");
+      const modalSubtitle = document.getElementById("modal-subtitle");
+
+      function setModalView(view) {
+        detailsCard.classList.add("hidden");
+        adoptionForm.classList.add("hidden");
+        adoptionSuccess.classList.add("hidden");
+
+        if (view === "details") {
+          modalTitle.textContent = "Pet Details";
+          modalSubtitle.textContent =
+            "Review this pet profile before submitting an adoption inquiry.";
+          detailsCard.classList.remove("hidden");
+          return;
+        }
+
+        if (view === "success") {
+          modalTitle.textContent = "Adoption Request Submitted";
+          modalSubtitle.textContent = "Your request is recorded for this pet.";
+          adoptionSuccess.classList.remove("hidden");
+          return;
+        }
+
+        modalTitle.textContent = "Adoption Inquiry";
+        modalSubtitle.textContent =
+          "Fill out the form below to start the adoption process.";
+        adoptionForm.classList.remove("hidden");
+      }
+
+      function renderPetModalInfo(pet) {
+        if (!pet) return;
+
+        document.getElementById("modal-pet-info").innerHTML = `
+          <div class="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center">
+            <i class="fas fa-paw text-2xl" style="color: var(--primary)"></i>
+          </div>
+          <div>
+            <h4 class="font-semibold text-lg" style="color: var(--dark)">${pet.name}</h4>
+            <p class="text-gray-600 text-sm">${pet.breed} • ${pet.age} year${pet.age !== 1 ? "s" : ""} old</p>
+          </div>
+        `;
+
+        document.getElementById("modal-pet-description").textContent =
+          pet.description || "No description available.";
+        document.getElementById("modal-pet-species").textContent =
+          pet.species || "-";
+        document.getElementById("modal-pet-gender").textContent =
+          pet.gender || "-";
+        document.getElementById("modal-pet-status").textContent =
+          pet.status || "-";
+        document.getElementById("modal-pet-vaccinated").textContent =
+          pet.isVaccinated ? "Vaccinated" : "Not Vaccinated";
+        document.getElementById("modal-pet-tags").innerHTML = (pet.tags || [])
+          .map(
+            (tag) =>
+              `<span class="px-3 py-1 bg-amber-50 text-amber-700 text-sm rounded-full">${tag}</span>`,
+          )
+          .join("");
+      }
+
+      function openPetDetailsModal(petId) {
+        selectedPet = allPets.find((pet) => pet.id === petId);
+        if (!selectedPet) return;
+
+        renderPetModalInfo(selectedPet);
+        setModalView("details");
+        modal.classList.add("active");
+      }
+
+      function openAdoptionModal(petId) {
+        selectedPet = allPets.find((pet) => pet.id === petId);
+        if (!selectedPet) return;
+
+        renderPetModalInfo(selectedPet);
+        setModalView("form");
+
+        modal.classList.add("active");
+      }
+
+      function openAdoptionFormFromDetails() {
+        if (!selectedPet) return;
+        if (selectedPet.status !== "Available") {
+          alert("This pet is currently not available for adoption.");
+          return;
+        }
+        setModalView("form");
+      }
+
+      document
+        .getElementById("details-start-adoption")
+        .addEventListener("click", openAdoptionFormFromDetails);
+
+      modalClose.addEventListener("click", () => {
+        modal.classList.remove("active");
+        selectedPet = null;
+      });
+
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("active");
+          selectedPet = null;
+        }
+      });
+
+      // Form submission
+      adoptionForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (!selectedPet) return;
+
+        const formData = {
+          petId: selectedPet.id,
+          adopterName: document.getElementById("adopter-name").value,
+          email: document.getElementById("adopter-email").value,
+          phone: document.getElementById("adopter-phone").value,
+          message: document.getElementById("adopter-message").value,
+        };
+
+        try {
+          const response = await fetch("/api/adoptions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          if (response.ok) {
+            adoptionForm.reset();
+            setModalView("success");
+          } else {
+            alert("Failed to submit adoption inquiry. Please try again.");
+          }
+        } catch (error) {
+          console.error("Error submitting adoption inquiry:", error);
+          alert("Failed to submit adoption inquiry. Please try again later.");
+        }
+      });
+
+      // Load pets on page load
+      window.addEventListener("load", loadPets);
+
+      // Navbar background on scroll
+      const nav = document.querySelector("nav");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 100) {
+          nav.classList.add("shadow-lg");
+        } else {
+          nav.classList.remove("shadow-lg");
+        }
+      });
+    </script>
+    <script>
+      (function () {
+        var token = localStorage.getItem("authToken");
+        if (!token) return;
+
+        var isAdmin = localStorage.getItem("isAdmin") === "true";
+        var dest = isAdmin ? "admin.html" : "dashboard.html";
+
+        function renderPill(username) {
+          var initial = (username || "?").charAt(0).toUpperCase();
+          ["nav-auth-btn", "mobile-auth-btn"].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.href = dest;
+            el.className = "";
+            el.style.cssText =
+              'display:inline-flex;align-items:center;gap:0.45rem;background:#2c2416;color:white;padding:0.28rem 0.75rem 0.28rem 0.28rem;border-radius:9999px;text-decoration:none;font-size:0.83rem;font-weight:500;line-height:1;font-family:"Work Sans",sans-serif;';
+            el.innerHTML =
+              '<span style="width:27px;height:27px;min-width:27px;background:#d4a574;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.72rem;color:white;">' +
+              initial +
+              "</span><span>" +
+              username +
+              "</span>";
+          });
+        }
+
+        function lockField(id, value) {
+          var el = document.getElementById(id);
+          if (!el || !value) return;
+          el.value = value;
+          el.readOnly = true;
+          el.style.background = "#f5f0ea";
+          el.style.cursor = "not-allowed";
+          el.style.borderColor = "#d4a574";
+          el.title = "Pre-filled from your account";
+          var label = document.querySelector('label[for="' + id + '"]');
+          if (label && !label.querySelector(".lock-icon")) {
+            var lock = document.createElement("span");
+            lock.className = "lock-icon";
+            lock.innerHTML =
+              ' <i class="fas fa-lock" style="font-size:0.65rem;color:#d4a574;margin-left:0.25rem;"></i>';
+            label.appendChild(lock);
+          }
+        }
+
+        function applyAll(username, email) {
+          renderPill(username);
+          lockField("adopter-name", username);
+          lockField("adopter-email", email);
+        }
+
+        var cachedName = localStorage.getItem("username");
+        var cachedEmail = localStorage.getItem("userEmail");
+        if (cachedName && cachedEmail) {
+          applyAll(cachedName, cachedEmail);
+        } else {
+          fetch("/api/auth/me", {
+            headers: { Authorization: "Bearer " + token },
+          })
+            .then(function (r) {
+              return r.json();
+            })
+            .then(function (body) {
+              if (body.success && body.data) {
+                var u = body.data.username || "";
+                var e = body.data.email || "";
+                localStorage.setItem("username", u);
+                localStorage.setItem("userEmail", e);
+                localStorage.setItem(
+                  "isAdmin",
+                  body.data.isAdmin ? "true" : "false",
+                );
+                dest = body.data.isAdmin ? "admin.html" : "dashboard.html";
+                applyAll(u, e);
+              }
+            })
+            .catch(function () {
+              renderPill(cachedName || "");
+            });
+        }
+      })();
+    </script>
+  </body>
+</html>
