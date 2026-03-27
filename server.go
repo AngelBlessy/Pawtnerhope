@@ -89,17 +89,31 @@ type ContactForm struct {
 }
 
 type ServiceBooking struct {
-	ID        string    `json:"id"`
-	ServiceID string    `json:"serviceId"`
-	PetName   string    `json:"petName"`
-	OwnerName string    `json:"ownerName"`
-	Email     string    `json:"email"`
-	Phone     string    `json:"phone"`
-	Date      string    `json:"date"`
-	Time      string    `json:"time"`
-	Notes     string    `json:"notes"`
-	Status    string    `json:"status"`
-	BookedAt  time.Time `json:"bookedAt"`
+	ID          string    `json:"id"`
+	ServiceID   string    `json:"serviceId"`
+	PetName     string    `json:"petName"`
+	OwnerName   string    `json:"ownerName"`
+	Email       string    `json:"email"`
+	Phone       string    `json:"phone"`
+	Date        string    `json:"date"`
+	Time        string    `json:"time"`
+	Notes       string    `json:"notes"`
+	Status      string    `json:"status"`
+	BookedAt    time.Time `json:"bookedAt"`
+	ReviewNotes string    `json:"reviewNotes,omitempty"`
+	ReviewedAt  time.Time `json:"reviewedAt,omitempty"`
+	ReviewedBy  string    `json:"reviewedBy,omitempty"`
+}
+
+type ServiceReview struct {
+	ID           string    `json:"id"`
+	BookingID    string    `json:"bookingId"`
+	ServiceID    string    `json:"serviceId"`
+	ReviewerName string    `json:"reviewerName"`
+	Email        string    `json:"email"`
+	Rating       int       `json:"rating"`
+	Comment      string    `json:"comment"`
+	CreatedAt    time.Time `json:"createdAt"`
 }
 
 type User struct {
@@ -231,6 +245,7 @@ var (
 	services        []Service
 	contactMessages []ContactForm
 	bookings        []ServiceBooking
+	serviceReviews  []ServiceReview
 	users           []User
 	donations       []Donation
 	inquiries       []AdoptionInquiry
@@ -239,6 +254,7 @@ var (
 	petsByID     map[string]*Pet
 	servicesByID map[string]*Service
 	bookingsByID map[string]*ServiceBooking
+	reviewsByID  map[string]*ServiceReview
 	usersByEmail map[string]*User
 	tokenStore   map[string]*AuthToken
 	statusCounts map[string]int
@@ -268,6 +284,7 @@ func initializeData() {
 	petsByID = make(map[string]*Pet)
 	servicesByID = make(map[string]*Service)
 	bookingsByID = make(map[string]*ServiceBooking)
+	reviewsByID = make(map[string]*ServiceReview)
 	usersByEmail = make(map[string]*User)
 	tokenStore = make(map[string]*AuthToken)
 	statusCounts = make(map[string]int)
@@ -279,6 +296,7 @@ func initializeData() {
 	services = make([]Service, 0, 20)
 	contactMessages = make([]ContactForm, 0)
 	bookings = make([]ServiceBooking, 0)
+	serviceReviews = make([]ServiceReview, 0)
 	users = make([]User, 0)
 	donations = make([]Donation, 0)
 	inquiries = make([]AdoptionInquiry, 0)
@@ -395,6 +413,7 @@ func initializeData() {
 			"bookings":  0,
 			"revenue":   0.0,
 			"rating":    4.5,
+			"reviews":   0,
 			"available": sampleServices[i].Available,
 		}
 	}
@@ -468,12 +487,33 @@ func calculateStatistics() map[string]interface{} {
 	stats["totalPets"] = len(pets)
 	stats["totalServices"] = len(services)
 	stats["totalBookings"] = len(bookings)
+	stats["totalReviews"] = len(serviceReviews)
 	stats["totalMessages"] = len(contactMessages)
 	stats["totalDonations"] = len(donations)
 	stats["totalInquiries"] = len(inquiries)
 	stats["totalUsers"] = len(users)
 
 	return stats
+}
+
+func recalculateServiceReviewStats() {
+	ratingTotals := make(map[string]int)
+	reviewCounts := make(map[string]int)
+
+	for _, review := range serviceReviews {
+		ratingTotals[review.ServiceID] += review.Rating
+		reviewCounts[review.ServiceID]++
+	}
+
+	for serviceID, stats := range serviceStats {
+		count := reviewCounts[serviceID]
+		stats["reviews"] = count
+		if count == 0 {
+			stats["rating"] = 0.0
+			continue
+		}
+		stats["rating"] = float64(ratingTotals[serviceID]) / float64(count)
+	}
 }
 
 // 6. INTERFACE (structre implenting the Filterable interface)
@@ -1142,6 +1182,13 @@ func bookingsColl() *mongo.Collection {
 	return mongoDB.Collection("services")
 }
 
+func reviewsColl() *mongo.Collection {
+	if mongoDB == nil {
+		return nil
+	}
+	return mongoDB.Collection("service_reviews")
+}
+
 func contactsColl() *mongo.Collection {
 	if mongoDB == nil {
 		return nil
@@ -1221,6 +1268,20 @@ func syncBookingToDB(booking ServiceBooking) error {
 	_, err := bookingsColl().ReplaceOne(ctx, bson.M{"id": booking.ID}, booking, opts)
 	if err != nil {
 		log.Printf("[MONGO] syncBookingToDB error: %v", err)
+	}
+	return err
+}
+
+func syncReviewToDB(review ServiceReview) error {
+	if reviewsColl() == nil {
+		return nil
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	opts := options.Replace().SetUpsert(true)
+	_, err := reviewsColl().ReplaceOne(ctx, bson.M{"id": review.ID}, review, opts)
+	if err != nil {
+		log.Printf("[MONGO] syncReviewToDB error: %v", err)
 	}
 	return err
 }
@@ -1354,6 +1415,22 @@ func loadFromMongoDB() {
 		}
 	}
 
+	// Service Reviews
+	if cur, err := reviewsColl().Find(ctx, bson.D{}); err == nil {
+		var dbReviews []ServiceReview
+		if err := cur.All(ctx, &dbReviews); err == nil && len(dbReviews) > 0 {
+			mu.Lock()
+			serviceReviews = dbReviews
+			reviewsByID = make(map[string]*ServiceReview)
+			for i := range serviceReviews {
+				reviewsByID[serviceReviews[i].ID] = &serviceReviews[i]
+			}
+			recalculateServiceReviewStats()
+			mu.Unlock()
+			log.Printf("[MONGO] Loaded %d service reviews", len(serviceReviews))
+		}
+	}
+
 	// Contact Messages
 	if cur, err := contactsColl().Find(ctx, bson.D{}); err == nil {
 		var dbContacts []ContactForm
@@ -1453,6 +1530,8 @@ func emailWorker(jobs <-chan NotificationJob) {
 	}
 }
 
+const emailWorkerCount = 3
+
 func paymentProcessor(donationQueue <-chan Donation, confirmations chan<- PaymentConfirmation) {
 	for donation := range donationQueue {
 		time.Sleep(50 * time.Millisecond)
@@ -1497,7 +1576,9 @@ func confirmationListener(confirmations <-chan PaymentConfirmation) {
 
 func startWorkers() {
 	// 11. GOROUTINES AND CHANNELS
-	go emailWorker(notificationCh)
+	for i := 0; i < emailWorkerCount; i++ {
+		go emailWorker(notificationCh)
+	}
 	go paymentProcessor(paymentCh, paymentConfirmCh)
 	go confirmationListener(paymentConfirmCh)
 }
@@ -1780,6 +1861,49 @@ func getBookingsHandler(w http.ResponseWriter, _ *http.Request) {
 	})
 }
 
+func getServiceReviewsHandler(w http.ResponseWriter, r *http.Request) {
+	serviceID := strings.TrimSpace(r.URL.Query().Get("serviceId"))
+
+	if coll := reviewsColl(); coll != nil {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		filter := bson.D{}
+		if serviceID != "" {
+			filter = bson.D{{Key: "serviceId", Value: serviceID}}
+		}
+		cur, err := coll.Find(ctx, filter)
+		if err == nil {
+			var result []ServiceReview
+			if err2 := cur.All(ctx, &result); err2 == nil {
+				if result == nil {
+					result = []ServiceReview{}
+				}
+				respondJSON(w, http.StatusOK, map[string]interface{}{
+					"success": true,
+					"count":   len(result),
+					"data":    result,
+				})
+				return
+			}
+		}
+	}
+
+	mu.Lock()
+	defer mu.Unlock()
+
+	result := make([]ServiceReview, 0, len(serviceReviews))
+	for _, review := range serviceReviews {
+		if serviceID == "" || review.ServiceID == serviceID {
+			result = append(result, review)
+		}
+	}
+	respondJSON(w, http.StatusOK, map[string]interface{}{
+		"success": true,
+		"count":   len(result),
+		"data":    result,
+	})
+}
+
 func createBookingHandler(w http.ResponseWriter, r *http.Request) {
 	var booking ServiceBooking
 
@@ -1873,6 +1997,170 @@ func createBookingHandler(w http.ResponseWriter, r *http.Request) {
 		"success": true,
 		"message": "Booking created successfully",
 		"data":    booking,
+	})
+}
+
+func createServiceReviewHandler(w http.ResponseWriter, r *http.Request) {
+	var review ServiceReview
+	if err := json.NewDecoder(r.Body).Decode(&review); err != nil {
+		respondError(w, http.StatusBadRequest, "Invalid JSON data")
+		return
+	}
+	defer r.Body.Close()
+
+	review.BookingID = strings.TrimSpace(review.BookingID)
+	review.ServiceID = strings.TrimSpace(review.ServiceID)
+	review.ReviewerName = strings.TrimSpace(review.ReviewerName)
+	review.Email = normalizeEmail(review.Email)
+	review.Comment = strings.TrimSpace(review.Comment)
+
+	if review.BookingID == "" || review.ServiceID == "" || review.ReviewerName == "" || review.Email == "" || review.Comment == "" {
+		respondError(w, http.StatusBadRequest, "Booking ID, service, name, email and comment are required")
+		return
+	}
+	if review.Rating < 1 || review.Rating > 5 {
+		respondError(w, http.StatusBadRequest, "Rating must be between 1 and 5")
+		return
+	}
+
+	mu.Lock()
+	booking, exists := bookingsByID[review.BookingID]
+	if !exists {
+		mu.Unlock()
+		respondError(w, http.StatusBadRequest, "Booking not found")
+		return
+	}
+	if booking.Email != review.Email {
+		mu.Unlock()
+		respondError(w, http.StatusBadRequest, "Review email must match the booking email")
+		return
+	}
+	if booking.ServiceID != review.ServiceID {
+		mu.Unlock()
+		respondError(w, http.StatusBadRequest, "Selected service does not match the booking")
+		return
+	}
+	for _, existing := range serviceReviews {
+		if existing.BookingID == review.BookingID {
+			mu.Unlock()
+			respondError(w, http.StatusConflict, "A review for this booking already exists")
+			return
+		}
+	}
+
+	review.ID = fmt.Sprintf("rev-%03d", len(serviceReviews)+1)
+	review.CreatedAt = time.Now()
+	serviceReviews = append(serviceReviews, review)
+	reviewsByID[review.ID] = &serviceReviews[len(serviceReviews)-1]
+	recalculateServiceReviewStats()
+	mu.Unlock()
+
+	if err := syncReviewToDB(review); err != nil {
+		mu.Lock()
+		delete(reviewsByID, review.ID)
+		serviceReviews = serviceReviews[:len(serviceReviews)-1]
+		recalculateServiceReviewStats()
+		mu.Unlock()
+		respondError(w, http.StatusInternalServerError, "Failed to save review. Please try again.")
+		return
+	}
+
+	if smtpUser != "" {
+		notificationCh <- NotificationJob{
+			To:      smtpUser,
+			Subject: "New Service Review Submitted",
+			Body: fmt.Sprintf(
+				"New service review received.\n\nBooking ID: %s\nService: %s\nReviewer: %s\nEmail: %s\nRating: %d/5\nComment: %s",
+				review.BookingID,
+				review.ServiceID,
+				review.ReviewerName,
+				review.Email,
+				review.Rating,
+				review.Comment,
+			),
+			JobType: "review-admin",
+		}
+	}
+
+	respondJSON(w, http.StatusCreated, map[string]interface{}{
+		"success": true,
+		"message": "Review submitted successfully",
+		"data":    review,
+	})
+}
+
+func updateBookingReviewHandler(w http.ResponseWriter, r *http.Request) {
+	path := strings.TrimPrefix(r.URL.Path, "/api/bookings/")
+	parts := strings.Split(strings.Trim(path, "/"), "/")
+	if len(parts) != 2 || parts[1] != "review" || parts[0] == "" {
+		respondError(w, http.StatusBadRequest, "Invalid booking review endpoint")
+		return
+	}
+	bookingID := parts[0]
+
+	var req struct {
+		Status      string `json:"status"`
+		ReviewNotes string `json:"reviewNotes"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		respondError(w, http.StatusBadRequest, "Invalid JSON")
+		return
+	}
+	defer r.Body.Close()
+
+	req.Status = strings.TrimSpace(req.Status)
+	req.ReviewNotes = strings.TrimSpace(req.ReviewNotes)
+	if req.Status != "Pending" && req.Status != "Approved" && req.Status != "Rejected" {
+		respondError(w, http.StatusBadRequest, "Invalid booking status")
+		return
+	}
+
+	adminUser, ok := requireAdmin(w, r)
+	if !ok {
+		return
+	}
+
+	var oldBooking ServiceBooking
+	var updated ServiceBooking
+	found := false
+
+	mu.Lock()
+	for i := range bookings {
+		if bookings[i].ID == bookingID {
+			oldBooking = bookings[i]
+			bookings[i].Status = req.Status
+			bookings[i].ReviewNotes = req.ReviewNotes
+			bookings[i].ReviewedAt = time.Now()
+			bookings[i].ReviewedBy = adminUser.Email
+			updated = bookings[i]
+			found = true
+			break
+		}
+	}
+	mu.Unlock()
+
+	if !found {
+		respondError(w, http.StatusNotFound, "Booking not found")
+		return
+	}
+
+	if err := syncBookingToDB(updated); err != nil {
+		mu.Lock()
+		for i := range bookings {
+			if bookings[i].ID == bookingID {
+				bookings[i] = oldBooking
+				break
+			}
+		}
+		mu.Unlock()
+		respondError(w, http.StatusInternalServerError, "Failed to persist booking review")
+		return
+	}
+
+	respondJSON(w, http.StatusOK, map[string]interface{}{
+		"success": true,
+		"message": "Booking review updated",
+		"data":    updated,
 	})
 }
 
@@ -2580,6 +2868,24 @@ func main() {
 			respondError(w, http.StatusMethodNotAllowed, "Method not allowed")
 		}
 	})))
+	http.HandleFunc("/api/reviews", recoverPanic(enableCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "GET":
+			getServiceReviewsHandler(w, r)
+		case "POST":
+			createServiceReviewHandler(w, r)
+		default:
+			respondError(w, http.StatusMethodNotAllowed, "Method not allowed")
+		}
+	})))
+	http.HandleFunc("/api/bookings/", recoverPanic(enableCORS(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "PUT":
+			updateBookingReviewHandler(w, r)
+		default:
+			respondError(w, http.StatusMethodNotAllowed, "Method not allowed")
+		}
+	})))
 	http.HandleFunc("/api/contact", recoverPanic(enableCORS(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
@@ -2686,6 +2992,8 @@ func main() {
 	log.Println("  GET    /api/services          - Get all services")
 	log.Println("  GET    /api/bookings          - Get all bookings")
 	log.Println("  POST   /api/bookings          - Create booking")
+	log.Println("  GET    /api/reviews           - Get service reviews")
+	log.Println("  POST   /api/reviews           - Create service review")
 	log.Println("  POST   /api/contact           - Submit contact form")
 	log.Println("  GET    /api/statistics        - Get statistics")
 	log.Println("  POST   /api/auth/register     - Register user")

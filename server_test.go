@@ -488,6 +488,221 @@ func TestRegisterHandler(t *testing.T) {
 	}
 }
 
+func TestVerifyEmailCreatesUserAndUpdatesStatistics(t *testing.T) {
+	initializeData()
+
+	body := bytes.NewBufferString(`{"email":"verified@test.com","username":"verifieduser","password":"pass123"}`)
+	req := httptest.NewRequest("POST", "/api/auth/register", body)
+	req.Header.Set("Content-Type", "application/json")
+	rr := httptest.NewRecorder()
+	registerHandler(rr, req)
+
+	if rr.Code != http.StatusAccepted {
+		t.Fatalf("expected 202 for registration start, got %d", rr.Code)
+	}
+
+	if got := calculateStatistics()["totalUsers"].(int); got != 1 {
+		t.Fatalf("expected totalUsers to remain 1 before verification, got %d", got)
+	}
+
+	mu.Lock()
+	pending := pendingRegs["verified@test.com"]
+	mu.Unlock()
+	if pending == nil {
+		t.Fatal("expected pending registration to exist")
+	}
+
+	verifyBody := bytes.NewBufferString(`{"email":"verified@test.com","code":"` + pending.Code + `"}`)
+	verifyReq := httptest.NewRequest("POST", "/api/auth/verify", verifyBody)
+	verifyReq.Header.Set("Content-Type", "application/json")
+	verifyRR := httptest.NewRecorder()
+	verifyEmailHandler(verifyRR, verifyReq)
+
+	if verifyRR.Code != http.StatusCreated {
+		t.Fatalf("expected 201 after verification, got %d", verifyRR.Code)
+	}
+
+	if got := calculateStatistics()["totalUsers"].(int); got != 2 {
+		t.Fatalf("expected totalUsers to become 2 after verification, got %d", got)
+	}
+}
+
+func TestUpdateBookingReviewHandlerPersistsReview(t *testing.T) {
+	initializeData()
+
+	bookingBody := bytes.NewBufferString(`{"serviceId":"svc-001","petName":"Max","ownerName":"Casey","email":"casey@example.com","phone":"9999999999","date":"2099-12-31","time":"10:30","notes":"Needs gentle handling"}`)
+	bookingReq := httptest.NewRequest("POST", "/api/bookings", bookingBody)
+	bookingReq.Header.Set("Content-Type", "application/json")
+	bookingRR := httptest.NewRecorder()
+	createBookingHandler(bookingRR, bookingReq)
+
+	if bookingRR.Code != http.StatusCreated {
+		t.Fatalf("expected 201 when creating booking, got %d", bookingRR.Code)
+	}
+
+	var createdResp struct {
+		Data ServiceBooking `json:"data"`
+	}
+	if err := json.NewDecoder(bookingRR.Body).Decode(&createdResp); err != nil {
+		t.Fatalf("failed to decode created booking: %v", err)
+	}
+
+	adminToken, err := Login("admin@pawtner.com", "admin123")
+	if err != nil {
+		t.Fatalf("failed to log in as admin: %v", err)
+	}
+
+	reviewBody := bytes.NewBufferString(`{"status":"Approved","reviewNotes":"Confirmed schedule with the owner."}`)
+	reviewReq := httptest.NewRequest("PUT", "/api/bookings/"+createdResp.Data.ID+"/review", reviewBody)
+	reviewReq.Header.Set("Content-Type", "application/json")
+	reviewReq.Header.Set("Authorization", "Bearer "+adminToken.Token)
+	reviewRR := httptest.NewRecorder()
+	updateBookingReviewHandler(reviewRR, reviewReq)
+
+	if reviewRR.Code != http.StatusOK {
+		t.Fatalf("expected 200 when reviewing booking, got %d", reviewRR.Code)
+	}
+
+	var reviewResp struct {
+		Data ServiceBooking `json:"data"`
+	}
+	if err := json.NewDecoder(reviewRR.Body).Decode(&reviewResp); err != nil {
+		t.Fatalf("failed to decode booking review: %v", err)
+	}
+
+	if reviewResp.Data.Status != "Approved" {
+		t.Fatalf("expected updated status Approved, got %s", reviewResp.Data.Status)
+	}
+	if reviewResp.Data.ReviewNotes != "Confirmed schedule with the owner." {
+		t.Fatalf("expected review notes to be persisted, got %q", reviewResp.Data.ReviewNotes)
+	}
+	if reviewResp.Data.ReviewedBy != "admin@pawtner.com" {
+		t.Fatalf("expected reviewedBy admin@pawtner.com, got %q", reviewResp.Data.ReviewedBy)
+	}
+	if reviewResp.Data.ReviewedAt.IsZero() {
+		t.Fatal("expected reviewedAt to be set")
+	}
+
+	mu.Lock()
+	defer mu.Unlock()
+	stored := bookingsByID[createdResp.Data.ID]
+	if stored == nil {
+		t.Fatal("expected reviewed booking in bookingsByID")
+	}
+	if stored.Status != "Approved" || stored.ReviewNotes != "Confirmed schedule with the owner." {
+		t.Fatalf("stored booking review not updated: %+v", *stored)
+	}
+}
+
+func TestCreateServiceReviewHandlerPersistsReviewAndStats(t *testing.T) {
+	initializeData()
+
+	bookingBody := bytes.NewBufferString(`{"serviceId":"svc-001","petName":"Milo","ownerName":"Jordan","email":"jordan@example.com","phone":"9999999999","date":"2099-12-31","time":"11:00","notes":"First visit"}`)
+	bookingReq := httptest.NewRequest("POST", "/api/bookings", bookingBody)
+	bookingReq.Header.Set("Content-Type", "application/json")
+	bookingRR := httptest.NewRecorder()
+	createBookingHandler(bookingRR, bookingReq)
+
+	if bookingRR.Code != http.StatusCreated {
+		t.Fatalf("expected 201 when creating booking, got %d", bookingRR.Code)
+	}
+
+	var bookingResp struct {
+		Data ServiceBooking `json:"data"`
+	}
+	if err := json.NewDecoder(bookingRR.Body).Decode(&bookingResp); err != nil {
+		t.Fatalf("failed to decode created booking: %v", err)
+	}
+
+	adminToken, err := Login("admin@pawtner.com", "admin123")
+	if err != nil {
+		t.Fatalf("failed to log in as admin: %v", err)
+	}
+
+	reviewBookingReq := httptest.NewRequest(
+		"PUT",
+		"/api/bookings/"+bookingResp.Data.ID+"/review",
+		bytes.NewBufferString(`{"status":"Approved","reviewNotes":"Completed successfully."}`),
+	)
+	reviewBookingReq.Header.Set("Content-Type", "application/json")
+	reviewBookingReq.Header.Set("Authorization", "Bearer "+adminToken.Token)
+	reviewBookingRR := httptest.NewRecorder()
+	updateBookingReviewHandler(reviewBookingRR, reviewBookingReq)
+
+	if reviewBookingRR.Code != http.StatusOK {
+		t.Fatalf("expected 200 when approving booking, got %d", reviewBookingRR.Code)
+	}
+
+	serviceReviewReq := httptest.NewRequest(
+		"POST",
+		"/api/reviews",
+		bytes.NewBufferString(`{"bookingId":"`+bookingResp.Data.ID+`","serviceId":"svc-001","reviewerName":"Jordan","email":"jordan@example.com","rating":5,"comment":"Very caring team."}`),
+	)
+	serviceReviewReq.Header.Set("Content-Type", "application/json")
+	serviceReviewRR := httptest.NewRecorder()
+	createServiceReviewHandler(serviceReviewRR, serviceReviewReq)
+
+	if serviceReviewRR.Code != http.StatusCreated {
+		t.Fatalf("expected 201 when creating review, got %d", serviceReviewRR.Code)
+	}
+
+	var reviewResp struct {
+		Data ServiceReview `json:"data"`
+	}
+	if err := json.NewDecoder(serviceReviewRR.Body).Decode(&reviewResp); err != nil {
+		t.Fatalf("failed to decode created review: %v", err)
+	}
+
+	if reviewResp.Data.Rating != 5 || reviewResp.Data.BookingID != bookingResp.Data.ID {
+		t.Fatalf("unexpected review response: %+v", reviewResp.Data)
+	}
+
+	stats := calculateStatistics()
+	if got := stats["totalReviews"].(int); got != 1 {
+		t.Fatalf("expected totalReviews to be 1, got %d", got)
+	}
+	if got := serviceStats["svc-001"]["reviews"].(int); got != 1 {
+		t.Fatalf("expected svc-001 reviews to be 1, got %d", got)
+	}
+	if got := serviceStats["svc-001"]["rating"].(float64); got != 5 {
+		t.Fatalf("expected svc-001 rating to be 5, got %.2f", got)
+	}
+}
+
+func TestCreateServiceReviewHandlerRejectsUnapprovedBooking(t *testing.T) {
+	initializeData()
+
+	bookingBody := bytes.NewBufferString(`{"serviceId":"svc-001","petName":"Milo","ownerName":"Jordan","email":"jordan@example.com","phone":"9999999999","date":"2099-12-31","time":"11:00","notes":"First visit"}`)
+	bookingReq := httptest.NewRequest("POST", "/api/bookings", bookingBody)
+	bookingReq.Header.Set("Content-Type", "application/json")
+	bookingRR := httptest.NewRecorder()
+	createBookingHandler(bookingRR, bookingReq)
+
+	if bookingRR.Code != http.StatusCreated {
+		t.Fatalf("expected 201 when creating booking, got %d", bookingRR.Code)
+	}
+
+	var bookingResp struct {
+		Data ServiceBooking `json:"data"`
+	}
+	if err := json.NewDecoder(bookingRR.Body).Decode(&bookingResp); err != nil {
+		t.Fatalf("failed to decode created booking: %v", err)
+	}
+
+	serviceReviewReq := httptest.NewRequest(
+		"POST",
+		"/api/reviews",
+		bytes.NewBufferString(`{"bookingId":"`+bookingResp.Data.ID+`","serviceId":"svc-001","reviewerName":"Jordan","email":"jordan@example.com","rating":5,"comment":"Very caring team."}`),
+	)
+	serviceReviewReq.Header.Set("Content-Type", "application/json")
+	serviceReviewRR := httptest.NewRecorder()
+	createServiceReviewHandler(serviceReviewRR, serviceReviewReq)
+
+	if serviceReviewRR.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400 for unapproved booking review, got %d", serviceReviewRR.Code)
+	}
+}
+
 func TestLoginHandlerLocksAccountAfterTwoFailures(t *testing.T) {
 	initializeData()
 	_, err := Register("lock@test.com", "lockuser", "pass123")
